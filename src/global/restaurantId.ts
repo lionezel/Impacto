@@ -1,0 +1,1 @@
+export const RestaurantId = "D92YFJ9B1NOCfSjz2fRU"
