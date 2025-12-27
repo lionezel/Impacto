@@ -5,7 +5,7 @@ import { category } from "../interfaces/category";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-export function useCategory() {
+export function useCategory () {
     const [category, setCategory] = useState<category[]>([]);
     const [loading, setLoading] = useState(true);
 

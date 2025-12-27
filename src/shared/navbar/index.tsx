@@ -12,6 +12,9 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { category } from "../../interfaces/category";
 import { CartDrawer } from "../CartDrawer";
+import { useAuth } from "../../hook/useAuth";
+import { UserMenu } from "../UserMenu";
+
 
 interface Props {
   category: category[];
@@ -23,7 +26,7 @@ export const Navbar = ({ category, cartCount = 0 }: Props) => {
   const [scrolled, setScrolled] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const navigate = useNavigate();
-
+  const { user } = useAuth();
 
   /* Sticky + shadow */
   useEffect(() => {
@@ -50,8 +53,13 @@ export const Navbar = ({ category, cartCount = 0 }: Props) => {
 
       {/* Icons */}
       <Icons>
-        <PersonOutlineIcon onClick={() => navigate("/login")}
-          style={{ cursor: "pointer" }} />
+        {user ? (
+          <UserMenu email={user.email!} />
+        ) : (
+
+          <PersonOutlineIcon onClick={() => navigate("/login")}
+            style={{ cursor: "pointer" }} />
+        )}
         <SearchIcon />
         <Badge badgeContent={cartCount} color="error">
           <ShoppingBagOutlinedIcon onClick={() => setCartOpen(true)} />

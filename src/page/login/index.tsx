@@ -78,11 +78,15 @@ export const LoginPage = () => {
                             placeholder="Correo electrónico"
                             variant="outlined"
                             sx={{ marginBottom: 3 }}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+
                         />
 
                         {/* BOTÓN */}
                         <Button
                             fullWidth
+                            onClick={handleSendLink}
                             sx={{
                                 backgroundColor: "#0f9d58",
                                 color: "#fff",
@@ -97,11 +101,44 @@ export const LoginPage = () => {
                         </Button>
                     </Box>
                 </Container>
-            ): (
-        <Typography>
-          📩 Revisa tu correo y abre el link para iniciar sesión
-        </Typography>
-      )}
+            ) : (
+                <Container
+                    maxWidth={false}
+                    sx={{
+                        minHeight: "100vh",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#fff",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: 420,
+                            padding: "48px 40px",
+                            border: "1px solid #eee",
+                            textAlign: "center",
+                        }}
+                    >
+                        {/* LOGO */}
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                fontFamily: "serif",
+                                fontWeight: 700,
+                                marginBottom: 4,
+                            }}
+                        >
+                            Impacto
+                        </Typography>
+
+                        {/* TITULO */}
+                        <Typography variant="h6" sx={{ marginBottom: 1 }}>
+                            Verificando
+                        </Typography>
+                    </Box>
+                </Container>
+            )}
         </div>
     );
 };

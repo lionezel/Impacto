@@ -1,15 +1,33 @@
 import { Product } from "../../interfaces/product";
 import styled from "styled-components";
 
+import { useNavigate } from "react-router-dom";
+import { addToCart } from "../../services/cart.service";
+import { useAuth } from "../../hook/useAuth";
 
 interface Props {
   product: Product;
-  onClick?: () => void;
 }
 
-export const ProductCard = ({ product, onClick }: Props) => {
+export const ProductCard = ({ product }: Props) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAddToCart = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.stopPropagation();
+
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    await addToCart(user.uid, product);
+  };
+
   return (
-    <Card onClick={onClick}>
+    <Card>
       <ImageWrapper>
         <img src={product.image} alt={product.name} />
       </ImageWrapper>
@@ -17,10 +35,15 @@ export const ProductCard = ({ product, onClick }: Props) => {
       <Info>
         <Title>{product.name}</Title>
         <Price>${product.price.toLocaleString("es-CO")}</Price>
+
+        <AddButton  onClick={handleAddToCart}>
+          Agregar al carrito
+        </AddButton>
       </Info>
     </Card>
   );
 };
+
 
 const Card = styled.div`
   background: #ffffff;
@@ -62,4 +85,21 @@ const Price = styled.p`
   font-size: 16px;
   font-weight: 700;
   margin: 0;
+`;
+
+const AddButton = styled.button`
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px 0;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #222;
+  }
 `;

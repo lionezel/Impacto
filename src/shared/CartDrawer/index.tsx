@@ -1,6 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import CloseIcon from "@mui/icons-material/Close";
 import styled from "styled-components";
+import { CartItem } from "../CartItem";
+import { useCart } from "../../hook/useCart";
+import { useMemo, useState } from "react";
 
 interface Props {
   open: boolean;
@@ -8,6 +11,47 @@ interface Props {
 }
 
 export const CartDrawer = ({ open, onClose }: Props) => {
+  const { cart, removeFromCart, updateQuantity } = useCart();
+  const [loading, setLoading] = useState(false);
+
+  const total = useMemo(() => {
+    return cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+  }, [cart]);
+
+  const handleCheckout = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "http://127.0.0.1:5001/store-d17ce/us-central1/createPreference",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: cart,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.init_point) {
+        throw new Error("No se pudo crear la preferencia");
+      }
+
+      window.location.href = data.init_point;
+    } catch (error) {
+      console.error(error);
+      alert("Error al iniciar el pago");
+      setLoading(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -25,7 +69,6 @@ export const CartDrawer = ({ open, onClose }: Props) => {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.4 }}
           >
             <Header>
               <Title>CARRITO</Title>
@@ -34,7 +77,43 @@ export const CartDrawer = ({ open, onClose }: Props) => {
               </CloseButton>
             </Header>
 
-            <Empty>TU CARRITO ESTÁ VACÍO</Empty>
+            {cart.length === 0 ? (
+              <Empty>TU CARRITO ESTÁ VACÍO</Empty>
+            ) : (
+              <Content>
+                {cart.map(item => (
+                  <CartItem
+                    key={item.productId}
+                    item={item}
+                    onRemove={() => removeFromCart(item.productId)}
+                    onIncrease={() =>
+                      updateQuantity(item.productId, item.quantity + 1)
+                    }
+                    onDecrease={() =>
+                      updateQuantity(item.productId, item.quantity - 1)
+                    }
+                  />
+                ))}
+              </Content>
+            )}
+
+            {cart.length > 0 && (
+              <Footer>
+                <Total>
+                  <span>Total</span>
+                  <strong>
+                    ${total.toLocaleString("es-CO")}
+                  </strong>
+                </Total>
+
+                <CheckoutButton
+                  onClick={handleCheckout}
+                  disabled={loading}
+                >
+                  {loading ? "PROCESANDO..." : "IR A PAGAR"}
+                </CheckoutButton>
+              </Footer>
+            )}
           </Drawer>
         </>
       )}
@@ -96,3 +175,36 @@ export const Empty = styled.div`
   color: #444;
 `;
 
+export const Content = styled.div`
+  flex: 1;
+  padding: 20px 24px;
+  overflow-y: auto;
+`;
+
+const Footer = styled.div`
+  padding: 16px;
+  border-top: 1px solid #eee;
+`;
+
+const Total = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-bottom: 12px;
+`;
+
+const CheckoutButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: black;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;

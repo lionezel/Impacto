@@ -1,0 +1,82 @@
+import styled from "styled-components";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+interface Props {
+  item: any;
+  onRemove: () => void;
+  onIncrease: () => void;
+  onDecrease: () => void;
+}
+
+export const CartItem = ({ item, onRemove, onIncrease, onDecrease }: Props) => {
+  return (
+    <Item>
+      <Image src={item.image} />
+
+      <Info>
+        <Title>{item.title}</Title>
+        <Price>${item.price.toLocaleString("es-CO")}</Price>
+
+        <Quantity>
+          <button onClick={onDecrease}>−</button>
+          <span>{item.quantity}</span>
+          <button onClick={onIncrease}>+</button>
+        </Quantity>
+      </Info>
+
+      <Delete onClick={onRemove}>
+        <DeleteIcon />
+      </Delete>
+    </Item>
+  );
+};
+
+const Item = styled.div`
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+`;
+
+const Image = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+`;
+
+const Info = styled.div`
+  flex: 1;
+`;
+
+const Title = styled.h4`
+  font-size: 14px;
+  margin: 0 0 4px;
+`;
+
+const Price = styled.p`
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px;
+`;
+
+const Quantity = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+`;
+
+const Delete = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d32f2f;
+`;

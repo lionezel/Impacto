@@ -1,16 +1,25 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CatalogPage, HomePage, LoginPage } from './page';
+import { CatalogPage, Checkout, Failure, HomePage, LoginPage, Pending, ProfilePage, Success, VerifyPage } from './page';
 import './App.css';
+import { AuthProvider } from './auth/AuthProvider';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/catalog/:slug" element={<CatalogPage />} />
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/catalog/:slug" element={<CatalogPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/verify" element={<VerifyPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/failure" element={<Failure />} />
+          <Route path="/pending" element={<Pending />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

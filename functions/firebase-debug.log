@@ -1,0 +1,248 @@
+[debug] [2025-12-26T19:21:20.787Z] ----------------------------------------------------------------------
+[debug] [2025-12-26T19:21:20.791Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\User\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --only functions
+[debug] [2025-12-26T19:21:20.792Z] CLI Version:   15.1.0
+[debug] [2025-12-26T19:21:20.792Z] Platform:      win32
+[debug] [2025-12-26T19:21:20.792Z] Node Version:  v24.11.1
+[debug] [2025-12-26T19:21:20.793Z] Time:          Fri Dec 26 2025 14:21:20 GMT-0500 (hora estándar de Colombia)
+[debug] [2025-12-26T19:21:20.793Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-26T19:21:24.727Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-26T19:21:24.728Z] > authorizing via signed-in user (miguel.barrera.205m@gmail.com)
+[info] i  emulators: Starting emulators: functions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions"}}
+[debug] [2025-12-26T19:21:24.747Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-26T19:21:24.747Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-12-26T19:21:24.757Z] Emulator locator file path: C:\Users\User\AppData\Local\Temp\hub-store-d17ce.json
+[debug] [2025-12-26T19:21:24.758Z] [hub] writing locator at C:\Users\User\AppData\Local\Temp\hub-store-d17ce.json
+[debug] [2025-12-26T19:21:24.794Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-26T19:21:24.794Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-26T19:21:24.794Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-26T19:21:24.794Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, auth, firestore, database, hosting, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, auth, firestore, database, hosting, pubsub, storage, dataconnect\u001b[22m"}}
+[debug] [2025-12-26T19:21:24.814Z] defaultcredentials: writing to file C:\Users\User\AppData\Roaming\firebase\miguel_barrera.205m_gmail.com_application_default_credentials.json
+[debug] [2025-12-26T19:21:24.822Z] Setting GAC to C:\Users\User\AppData\Roaming\firebase\miguel_barrera.205m_gmail.com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\User\\AppData\\Roaming\\firebase\\miguel_barrera.205m_gmail.com_application_default_credentials.json"}}
+[debug] [2025-12-26T19:21:24.824Z] Checked if tokens are valid: true, expires at: 1766780338867
+[debug] [2025-12-26T19:21:24.824Z] Checked if tokens are valid: true, expires at: 1766780338867
+[debug] [2025-12-26T19:21:24.826Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/store-d17ce/adminSdkConfig [none]
+[debug] [2025-12-26T19:21:25.414Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/store-d17ce/adminSdkConfig 200
+[debug] [2025-12-26T19:21:25.414Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/store-d17ce/adminSdkConfig {"projectId":"store-d17ce","storageBucket":"store-d17ce.appspot.com","locationId":"us-central"}
+[info] i  functions: Watching "C:\Users\User\Desktop\Negocios\Impacto\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions\" for Cloud Functions..."}}
+[debug] [2025-12-26T19:21:25.489Z] Validating nodejs source
+[debug] [2025-12-26T19:21:27.294Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "24"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.0",
+    "mercadopago": "^2.11.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2025-12-26T19:21:27.295Z] Building nodejs source
+[debug] [2025-12-26T19:21:27.295Z] Failed to find version of module node: reached end of search path C:\Users\User\Desktop\Negocios\Impacto\functions\node_modules
+[info] +  functions: Using node@24 from host. 
+[debug] [2025-12-26T19:21:27.299Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-12-26T19:21:27.328Z] Found firebase-functions binary at 'C:\Users\User\Desktop\Negocios\Impacto\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8356
+
+[debug] [2025-12-26T19:21:28.742Z] Got response from /__/functions.yaml {"endpoints":{"createPreference":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","secretEnvironmentVariables":[{"key":"MP_ACCESS_TOKEN"}],"labels":{},"httpsTrigger":{},"entryPoint":"createPreference"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{},"params":[{"type":"secret","name":"MP_ACCESS_TOKEN"}]}
+[info] +  functions: Loaded functions definitions from source: createPreference. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: createPreference."}}
+[info] +  functions[us-central1-createPreference]: http function initialized (http://127.0.0.1:5001/store-d17ce/us-central1/createPreference). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/store-d17ce/us-central1/createPreference)."}}
+[debug] [2025-12-26T19:21:32.807Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port      │ View in Emulator UI             │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Functions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+└───────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2025-12-26T19:21:49.496Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T19:21:49.496Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T19:21:49.497Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T19:21:49.496Z"],"workRunningCount":1}
+[debug] [2025-12-26T19:21:49.498Z] Accepted request OPTIONS /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T19:21:49.502Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T19:21:49.503Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[info] i  functions: Trying to access secret MP_ACCESS_TOKEN@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret MP_ACCESS_TOKEN@latest"}}
+[debug] [2025-12-26T19:21:49.506Z] Checked if tokens are valid: true, expires at: 1766780338867
+[debug] [2025-12-26T19:21:49.506Z] Checked if tokens are valid: true, expires at: 1766780338867
+[debug] [2025-12-26T19:21:49.507Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/store-d17ce/secrets/MP_ACCESS_TOKEN/versions/latest:access [none]
+[debug] [2025-12-26T19:21:50.155Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/store-d17ce/secrets/MP_ACCESS_TOKEN/versions/latest:access 200
+[debug] [2025-12-26T19:21:50.155Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/store-d17ce/secrets/MP_ACCESS_TOKEN/versions/latest:access {"name":"projects/421462810786/secrets/MP_ACCESS_TOKEN/versions/4","payload":{"data":"QVBQX1VTUi04ODQ5ODExNDc1MTYwMDI0LTEyMjYxNC01NGYyMmNjNGZkYjc4MTMzZmFjZDIwMGQzZWY5NThiZi0zMDkyMzY4OTg4","dataCrc32c":"1103456091"}}
+[debug] [2025-12-26T19:21:50.167Z] [worker-pool] addWorker(us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-createPreference)"}}
+[debug] [2025-12-26T19:21:50.168Z] [worker-pool] Adding worker with key us-central1-createPreference, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-createPreference, total=1"}}
+[debug] [2025-12-26T19:21:52.453Z] [runtime-status] [5696] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\User\\\\Desktop\\\\Negocios\\\\Impacto\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2025-12-26T19:21:52.455Z] [runtime-status] [5696] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.2","resolution":"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.2\",\"resolution\":\"C:\\\\Users\\\\User\\\\Desktop\\\\Negocios\\\\Impacto\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2025-12-26T19:21:52.456Z] [runtime-status] [5696] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2025-12-26T19:21:52.457Z] [runtime-status] [5696] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.2","resolution":"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.2\",\"resolution\":\"C:\\\\Users\\\\User\\\\Desktop\\\\Negocios\\\\Impacto\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2025-12-26T19:21:52.458Z] [runtime-status] [5696] Detected firebase-functions v7+, skipping legacy stubs. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Detected firebase-functions v7+, skipping legacy stubs."}}
+[debug] [2025-12-26T19:21:52.459Z] [runtime-status] [5696] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\User\\\\Desktop\\\\Negocios\\\\Impacto\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2025-12-26T19:21:52.617Z] [runtime-status] [5696] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.2","resolution":"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.2\",\"resolution\":\"C:\\\\Users\\\\User\\\\Desktop\\\\Negocios\\\\Impacto\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2025-12-26T19:21:53.308Z] [runtime-status] [5696] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions\\node_modules\\firebase-admin\\lib\\index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\User\\\\Desktop\\\\Negocios\\\\Impacto\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}}"}}
+[debug] [2025-12-26T19:21:53.497Z] [runtime-status] [5696] Functions runtime initialized. {"cwd":"C:\\Users\\User\\Desktop\\Negocios\\Impacto\\functions","node_version":"24.11.1"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Functions runtime initialized. {\"cwd\":\"C:\\\\Users\\\\User\\\\Desktop\\\\Negocios\\\\Impacto\\\\functions\",\"node_version\":\"24.11.1\"}"}}
+[debug] [2025-12-26T19:21:53.498Z] [runtime-status] [5696] Listening to port: \\?\pipe\fire_emu_0fc51c76c74620bf {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[runtime-status] [5696] Listening to port: \\\\?\\pipe\\fire_emu_0fc51c76c74620bf"}}
+[debug] [2025-12-26T19:21:53.536Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T19:21:53.536Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T19:21:53.537Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[debug] [2025-12-26T19:21:53.541Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 4.3673ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 4.3673ms"}}
+[debug] [2025-12-26T19:21:53.542Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T19:21:53.542Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T19:21:53.542Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T19:21:53.542Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T19:21:53.543Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T19:21:53.543Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T19:21:53.543Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T19:21:53.543Z"],"workRunningCount":1}
+[debug] [2025-12-26T19:21:53.543Z] Accepted request POST /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T19:21:53.544Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T19:21:53.544Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[debug] [2025-12-26T19:21:53.544Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T19:21:53.545Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[warn] !  External network resource requested!
+   - URL: "https://api.mercadopago.com/checkout/preferences/"
+ - Be careful, this may be a production service. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"External network resource requested!\n   - URL: \"https://api.mercadopago.com/checkout/preferences/\"\n - Be careful, this may be a production service."}}
+[info] >  MP ERROR: { {"user":"MP ERROR: {","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m MP ERROR: {"}}
+[info] >    message: 'auto_return invalid. back_url.success must be defined', {"user":"  message: 'auto_return invalid. back_url.success must be defined',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   message: 'auto_return invalid. back_url.success must be defined',"}}
+[info] >    error: 'invalid_auto_return', {"user":"  error: 'invalid_auto_return',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   error: 'invalid_auto_return',"}}
+[info] >    status: 400, {"user":"  status: 400,","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   status: 400,"}}
+[info] >    cause: null {"user":"  cause: null","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   cause: null"}}
+[info] >  } {"user":"}","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m }"}}
+[debug] [2025-12-26T19:21:53.898Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 352.9732ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 352.9732ms"}}
+[debug] [2025-12-26T19:21:53.899Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T19:21:53.899Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T19:21:53.899Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T19:21:53.899Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T20:32:23.085Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T20:32:23.085Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T20:32:23.086Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T20:32:23.085Z"],"workRunningCount":1}
+[debug] [2025-12-26T20:32:23.086Z] Accepted request OPTIONS /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T20:32:23.090Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T20:32:23.090Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[debug] [2025-12-26T20:32:23.090Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T20:32:23.091Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[debug] [2025-12-26T20:32:23.094Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 3.5815ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 3.5815ms"}}
+[debug] [2025-12-26T20:32:23.095Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T20:32:23.095Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T20:32:23.095Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T20:32:23.095Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T20:32:23.096Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T20:32:23.096Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T20:32:23.096Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T20:32:23.096Z"],"workRunningCount":1}
+[debug] [2025-12-26T20:32:23.096Z] Accepted request POST /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T20:32:23.098Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T20:32:23.098Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[debug] [2025-12-26T20:32:23.098Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T20:32:23.099Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[info] >  MP ERROR: { {"user":"MP ERROR: {","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m MP ERROR: {"}}
+[info] >    message: 'auto_return invalid. back_url.success must be defined', {"user":"  message: 'auto_return invalid. back_url.success must be defined',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   message: 'auto_return invalid. back_url.success must be defined',"}}
+[info] >    error: 'invalid_auto_return', {"user":"  error: 'invalid_auto_return',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   error: 'invalid_auto_return',"}}
+[info] >    status: 400, {"user":"  status: 400,","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   status: 400,"}}
+[info] >    cause: null {"user":"  cause: null","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   cause: null"}}
+[info] >  } {"user":"}","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m }"}}
+[debug] [2025-12-26T20:32:23.425Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 326.462ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 326.462ms"}}
+[debug] [2025-12-26T20:32:23.426Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T20:32:23.426Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T20:32:23.426Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T20:32:23.427Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:01:32.607Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:01:32.607Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:01:32.608Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:01:32.607Z"],"workRunningCount":1}
+[debug] [2025-12-26T21:01:32.608Z] Accepted request OPTIONS /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T21:01:32.610Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T21:01:32.610Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[debug] [2025-12-26T21:01:32.610Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T21:01:32.611Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[debug] [2025-12-26T21:01:32.614Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 2.9186ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 2.9186ms"}}
+[debug] [2025-12-26T21:01:32.615Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T21:01:32.615Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T21:01:32.615Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T21:01:32.615Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:01:32.616Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:01:32.616Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:01:32.616Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:01:32.616Z"],"workRunningCount":1}
+[debug] [2025-12-26T21:01:32.616Z] Accepted request POST /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T21:01:32.618Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T21:01:32.618Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[debug] [2025-12-26T21:01:32.618Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T21:01:32.619Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[info] >  MP ERROR: { {"user":"MP ERROR: {","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m MP ERROR: {"}}
+[info] >    message: 'auto_return invalid. back_url.success must be defined', {"user":"  message: 'auto_return invalid. back_url.success must be defined',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   message: 'auto_return invalid. back_url.success must be defined',"}}
+[info] >    error: 'invalid_auto_return', {"user":"  error: 'invalid_auto_return',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   error: 'invalid_auto_return',"}}
+[info] >    status: 400, {"user":"  status: 400,","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   status: 400,"}}
+[info] >    cause: null {"user":"  cause: null","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   cause: null"}}
+[info] >  } {"user":"}","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m }"}}
+[debug] [2025-12-26T21:01:32.934Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 314.8635ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 314.8635ms"}}
+[debug] [2025-12-26T21:01:32.934Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T21:01:32.934Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T21:01:32.935Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T21:01:32.935Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:06:20.151Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:06:20.151Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:06:20.152Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:06:20.151Z"],"workRunningCount":1}
+[debug] [2025-12-26T21:06:20.152Z] Accepted request OPTIONS /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T21:06:20.155Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T21:06:20.155Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[debug] [2025-12-26T21:06:20.155Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T21:06:20.156Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[debug] [2025-12-26T21:06:20.160Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 4.4564ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 4.4564ms"}}
+[debug] [2025-12-26T21:06:20.162Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T21:06:20.162Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T21:06:20.162Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T21:06:20.163Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:06:20.164Z] [work-queue] {"queuedWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:06:20.164Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:06:20.164Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/store-d17ce/us-central1/createPreference-2025-12-26T21:06:20.164Z"],"workRunningCount":1}
+[debug] [2025-12-26T21:06:20.164Z] Accepted request POST /store-d17ce/us-central1/createPreference --> us-central1-createPreference
+[debug] [2025-12-26T21:06:20.168Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-12-26T21:06:20.168Z] [functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/store-d17ce/us-central1/createPreference, mapping to path=/"}}
+[debug] [2025-12-26T21:06:20.168Z] [worker-pool] submitRequest(triggerId=us-central1-createPreference) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-createPreference)"}}
+[info] i  functions: Beginning execution of "us-central1-createPreference" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Beginning execution of \"us-central1-createPreference\""}}
+[debug] [2025-12-26T21:06:20.169Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: BUSY"}}
+[info] >  MP ERROR: { {"user":"MP ERROR: {","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m MP ERROR: {"}}
+[info] >    message: 'auto_return invalid. back_url.success must be defined', {"user":"  message: 'auto_return invalid. back_url.success must be defined',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   message: 'auto_return invalid. back_url.success must be defined',"}}
+[info] >    error: 'invalid_auto_return', {"user":"  error: 'invalid_auto_return',","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   error: 'invalid_auto_return',"}}
+[info] >    status: 400, {"user":"  status: 400,","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   status: 400,"}}
+[info] >    cause: null {"user":"  cause: null","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m   cause: null"}}
+[info] >  } {"user":"}","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"\u001b[90m> \u001b[39m }"}}
+[debug] [2025-12-26T21:06:20.489Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-createPreference" in 320.7236ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finished \"us-central1-createPreference\" in 320.7236ms"}}
+[debug] [2025-12-26T21:06:20.490Z] [worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"[worker-us-central1-createPreference-14686d92-1219-436b-8491-0ca6704b0b3b]: IDLE"}}
+[debug] [2025-12-26T21:06:20.490Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-12-26T21:06:20.491Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createPreference"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-12-26T21:06:20.491Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-26T21:32:09.840Z] Received signal SIGHUP 1
