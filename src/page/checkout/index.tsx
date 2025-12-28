@@ -1,17 +1,26 @@
 import { useMemo, useState } from "react";
 import styled from "styled-components";
 import { useCart } from "../../hook/useCart";
-import { CardForm } from "../../shared/CardForm";
+
+// 🔥 Firebase
+import { getAuth } from "firebase/auth";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebase/config";
+import { RestaurantId } from "../../global/restaurantId";
+import { useNavigate } from "react-router-dom";
 
 export const Checkout = () => {
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
+  const navigate = useNavigate();
+  
+  const auth = getAuth();
+  const user = auth.currentUser;
+
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "card">("cash");
   const [address, setAddress] = useState("");
-  const [cardToken, setCardToken] = useState<string | null>(null);
-
-  // ======================
-  // CALCULOS
-  // ======================
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [phone, setPhone] = useState("");
 
   const subtotal = useMemo(
     () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -21,42 +30,69 @@ export const Checkout = () => {
   const discount = subtotal * 0.05;
   const shipping = 0;
   const taxes = (subtotal - discount) * 0.19;
-
   const total = subtotal - discount + shipping + taxes;
 
-  // ======================
-  // PAGO
-  // ======================
-
   const handlePay = async () => {
-  if (paymentMethod === "cash") {
-    alert("Pedido creado. Pago en efectivo.");
-    return;
-  }
+    if (!user) {
+      alert("Debes iniciar sesión");
+      return;
+    }
 
-  if (!cardToken) {
-    alert("Completa los datos de la tarjeta");
-    return;
-  }
+    if (!name || !address || !city || !phone) {
+      alert("Completa todos los datos de entrega");
+      return;
+    }
 
-  const res = await fetch("/createPayment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      token: cardToken,
-      amount: total,
-    }),
-  });
+    if (paymentMethod === "cash") {
+      try {
+        await addDoc(collection(db, "restaurants", RestaurantId, "orders"), {
+          name,
+          userId: user.uid,
+          orderType: "llevar", // o comerAca (si tienes selector)
+          paymentMethod: "efectivo",
+          products: cart.map((item) => ({
+            id: item.productId,
+            name: item.name,
+            image: item.image,
+            price: item.price,
+            quantity: item.quantity,
+            total: item.price * item.quantity,
+          })),
+          address: address,
+          date: serverTimestamp(),
+        });
+        clearCart();
+        navigate("/");
+        alert("Pedido confirmado. Revisa tu correo 📧");
+        return;
+      } catch (error) {
+        console.error(error);
+        alert("Error al crear el pedido");
+        return;
+      }
+    }
 
-  const data = await res.json();
+    // ======================
+    // TARJETA (MERCADO PAGO)
+    // ======================
+    const res = await fetch(
+      "http://localhost:5001/store-d17ce/us-central1/createPreference",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ total }),
+      }
+    );
 
-  if (data.status === "approved") {
-    alert("Pago aprobado 🎉");
-  } else {
-    alert("Pago rechazado ❌");
-  }
-};
+    const data = await res.json();
 
+    if (!data.init_point) {
+      alert("Error al crear el pago");
+      return;
+    }
+
+    window.location.href = data.init_point;
+  };
 
   return (
     <Page>
@@ -65,19 +101,36 @@ export const Checkout = () => {
         <Main>
           <Block>
             <Title>Contacto</Title>
-            <Input placeholder="Correo electrónico" />
+            <Input
+              value={user?.email || ""}
+              disabled
+              placeholder="Correo electrónico"
+            />
           </Block>
 
           <Block>
             <Title>Entrega</Title>
             <Grid>
-              <Input placeholder="Nombre completo" />
+              <Input
+                placeholder="Nombre completo"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
               <Input
                 placeholder="Dirección"
+                value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
-              <Input placeholder="Ciudad" />
-              <Input placeholder="Teléfono" />
+              <Input
+                placeholder="Ciudad"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+              <Input
+                placeholder="Teléfono"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
             </Grid>
           </Block>
 
@@ -96,14 +149,16 @@ export const Checkout = () => {
             <PaymentOption>
               <input
                 type="radio"
-                checked={paymentMethod === "card"}  
+                checked={paymentMethod === "card"}
                 onChange={() => setPaymentMethod("card")}
               />
-              <CardForm amount={total} />
+              <span>Pagar con tarjeta (Mercado Pago)</span>
             </PaymentOption>
           </Block>
 
-          <PayButton onClick={handlePay}>Pagar ahora</PayButton>
+          <PayButton onClick={handlePay}>
+            Pagar ${total.toLocaleString("es-CO")}
+          </PayButton>
         </Main>
 
         {/* DERECHA */}
@@ -113,7 +168,7 @@ export const Checkout = () => {
           {cart.map((item) => (
             <Item key={item.productId}>
               <ItemInfo>
-               <Image src={item.image} />
+                <Image src={item.image} />
                 <div>
                   <ItemName>{item.name}</ItemName>
                   <ItemQty>x {item.quantity}</ItemQty>
@@ -140,7 +195,7 @@ export const Checkout = () => {
 
           <Row>
             <span>Envío</span>
-            <span>{shipping === 0 ? "Gratis" : `$${shipping}`}</span>
+            <span>Gratis</span>
           </Row>
 
           <Row>
@@ -164,6 +219,10 @@ export const Checkout = () => {
   );
 };
 
+/* ======================
+   ESTILOS
+====================== */
+
 const Page = styled.div`
   background: #fafafa;
   min-height: 100vh;
@@ -182,9 +241,9 @@ const Main = styled.div``;
 
 const Sidebar = styled.div`
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
-  height: fit-content;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
 `;
 
 const Block = styled.div`
@@ -199,7 +258,7 @@ const Title = styled.h2`
 const Input = styled.input`
   width: 100%;
   padding: 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #ddd;
   margin-bottom: 12px;
   font-size: 14px;
@@ -214,21 +273,20 @@ const Grid = styled.div`
 const PaymentOption = styled.label`
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px;
+  gap: 12px;
+  padding: 16px;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 12px;
   margin-bottom: 12px;
   cursor: pointer;
-  font-size: 14px;
 `;
 
 const PayButton = styled.button`
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   background: #000;
   color: #fff;
-  border-radius: 10px;
+  border-radius: 14px;
   font-size: 16px;
   border: none;
   cursor: pointer;
@@ -250,11 +308,11 @@ const ItemInfo = styled.div`
   gap: 12px;
 `;
 
-const Thumb = styled.div`
-  width: 48px;
-  height: 48px;
-  background: #eee;
-  border-radius: 8px;
+const Image = styled.img`
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 12px;
 `;
 
 const ItemName = styled.p`
@@ -295,11 +353,4 @@ const TaxNote = styled.p`
   font-size: 12px;
   color: #777;
   margin-top: 8px;
-`;
-
-const Image = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 10px;
 `;

@@ -21,6 +21,8 @@ export const CardForm = ({ amount }: { amount: number }) => {
               token: data.token,
               transaction_amount: data.transaction_amount,
               payment_method_id: data.payment_method_id,
+              installments: 1,
+              payer: { email: "test_user_123@testuser.com" },
               // ❌ NO installments
               // ❌ NO issuer_id
             }),

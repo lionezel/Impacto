@@ -1,18 +1,37 @@
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 import { useAuth } from "./useAuth";
 import { db } from "../firebase/config";
 import { RestaurantId } from "../global/restaurantId";
 
-
-export interface Order {
+// ==========================
+// ITEM DE LA ORDEN
+// ==========================
+export interface OrderItem {
     id: string;
-    total: number;
-    status: string;
-    createdAt: any;
-    items: any[];
+    name: string;
+    image: string;
+    price: number;
+    quantity: number;
+    total?: number;
 }
 
+// ==========================
+// ORDEN COMPLETA
+// ==========================
+export interface Order {
+    id: string;
+    products: OrderItem[];
+    total?: number; // opcional si quieres calcularlo dinámicamente
+    paymentMethod: "efectivo" | "tarjeta" | "transferencia";
+    orderType: "llevar" | "comerAca";
+    address?: string;
+    date: Date; // ya convertido a Date
+}
+
+// ==========================
+// HOOK
+// ==========================
 export const useUserOrders = () => {
     const { user } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
@@ -22,21 +41,34 @@ export const useUserOrders = () => {
         if (!user) return;
 
         const fetchOrders = async () => {
-            const q = query(
-                collection(db,"restaurants", RestaurantId, "orders"),
-                where("userId", "==", user.uid),
-                orderBy("createdAt", "desc")
-            );
+            try {
+                // 🔹 Query Firestore
+                const q = query(
+                    collection(db, "restaurants", RestaurantId, "orders"),
+                    where("userId", "==", user.uid),
+                    orderBy("createdAt", "desc") // ⚠️ requiere índice compuesto
+                );
+                const snapshot = await getDocs(
+                    query(
+                        collection(db, "restaurants", RestaurantId, "orders"),
+                        where("userId", "==", user.uid)
+                    )
+                );
 
-            const snapshot = await getDocs(q);
+                const data = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                })) as Order[];
 
-            const data = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            })) as Order[];
+                // Ordenar manualmente por createdAt en JS
+             
 
-            setOrders(data);
-            setLoading(false);
+                setOrders(data);
+            } catch (error) {
+                console.error("Error fetching user orders:", error);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchOrders();

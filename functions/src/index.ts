@@ -1,53 +1,40 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { MercadoPagoConfig, Payment } from "mercadopago";
-import express from "express";
+import { MercadoPagoConfig, Preference } from "mercadopago";
+import { defineSecret } from "firebase-functions/params";
 
-const app = express();
-app.use(express.json());
+const MP_ACCESS_TOKEN = defineSecret("MP_ACCESS_TOKEN");
 
-const mpClient = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-});
-
-app.post("/", async (req, res) => {
-  try {
-    const {
-      token,
-      transaction_amount,
-      payment_method_id,
-    } = req.body;
-
-    console.log("RECIBIDO >>>", req.body);
-
-    if (!token || !transaction_amount || !payment_method_id) {
-      return res.status(400).json({
-        error: "Datos incompletos",
-        received: req.body,
+export const createPreference = onRequest(
+  { secrets: [MP_ACCESS_TOKEN] },
+  async (req, res) => {
+    try {
+      const client = new MercadoPagoConfig({
+        accessToken: MP_ACCESS_TOKEN.value(), // ahora sí existe
       });
+
+      const preference = new Preference(client);
+
+      const result = await preference.create({
+        body: {
+          items: [
+            {
+              id: "test-001",
+              title: "Producto Test",
+              quantity: 1,
+              unit_price: 10000,
+              currency_id: "COP",
+            },
+          ],
+        },
+      });
+
+      res.json({
+        init_point: result.init_point,
+        id: result.id,
+      });
+    } catch (error: any) {
+      console.error("MP ERROR:", error);
+      res.status(500).json(error);
     }
-
-    const payment = new Payment(mpClient);
-
-    const result = await payment.create({
-      body: {
-        transaction_amount,
-        token,
-        payment_method_id,
-        installments: 1, // 🔥 SIEMPRE UNA SOLA CUOTA
-        description: "Pago sin cuotas",
-      },
-    });
-
-    console.log("PAGO STATUS >>>", result.status);
-
-    res.status(200).json(result);
-  } catch (error: any) {
-    console.error("ERROR MP >>>", error);
-    res.status(500).json({
-      error: error?.message || "Error Mercado Pago",
-      details: error,
-    });
   }
-});
-
-export const createPayment = onRequest(app);
+);

@@ -20,6 +20,9 @@ function App() {
           <Route path="/success" element={<Success />} />
           <Route path="/failure" element={<Failure />} />
           <Route path="/pending" element={<Pending />} />
+          <Route path="/checkout/success" element={<h1>Pago aprobado ✅</h1>} />
+  <Route path="/checkout/failure" element={<h1>Pago rechazado ❌</h1>} />
+  <Route path="/checkout/pending" element={<h1>Pago pendiente ⏳</h1>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

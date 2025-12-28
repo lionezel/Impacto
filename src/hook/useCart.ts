@@ -2,6 +2,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   setDoc,
   updateDoc,
@@ -100,11 +101,33 @@ export const useCart = () => {
     );
   };
 
+  const clearCart = async () => {
+  if (!user) return;
+
+  const ref = collection(
+    db,
+    "restaurants",
+    RestaurantId,
+    "carts",
+    user.uid,
+    "items"
+  );
+
+  const snap = await getDocs(ref);
+
+  const deletes = snap.docs.map((docu) =>
+    deleteDoc(docu.ref)
+  );
+
+  await Promise.all(deletes);
+};
+
   return {
     cart,
     loading,
     addToCart,
     updateQuantity,
     removeFromCart,
+    clearCart
   };
 };

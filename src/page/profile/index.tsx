@@ -4,12 +4,19 @@ import {
   Typography,
   Divider,
   Chip,
+  Avatar,
+  Stack,
 } from "@mui/material";
 import { useUserOrders } from "../../hook/useUserOrders";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+
 
 
 export const ProfilePage = () => {
   const { orders, loading } = useUserOrders();
+
+  console.log(orders)
 
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
@@ -23,74 +30,89 @@ export const ProfilePage = () => {
         <Typography>No tienes pedidos aún</Typography>
       )}
 
-      {orders.map((order) => (
-        <Box
-          key={order.id}
-          sx={{
-            border: "1px solid #eee",
-            borderRadius: 2,
-            padding: 3,
-            mb: 3,
-          }}
-        >
-          {/* HEADER */}
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Typography fontWeight={600}>
-              Pedido #{order.id.slice(0, 8)}
-            </Typography>
+      {!loading &&
+        orders.map((order: any) => {
+          const date = order.date?.toDate ? order.date.toDate() : new Date(order.date);
 
-            <Chip
-              label={order.status}
-              color={order.status === "paid" ? "success" : "warning"}
-            />
-          </Box>
+          // Total general del pedido
+          const totalGeneral = order.products.reduce(
+            (acc: any, p: any) => acc + Number(p.total ?? Number(p.price) * Number(p.quantity)),
+            0
+          );
 
-          <Divider sx={{ mb: 2 }} />
-
-          {/* ITEMS */}
-          {order.items.map((item, index) => (
+          return (
             <Box
-              key={index}
-              display="flex"
-              alignItems="center"
-              mb={2}
-              gap={2}
+              key={order.id}
+              sx={{
+                border: "1px solid #eee",
+                borderRadius: 3,
+                p: 3,
+                mb: 3,
+                boxShadow: 2,
+                transition: "0.3s",
+                "&:hover": { boxShadow: 5 },
+              }}
             >
-              <img
-                src={item.image}
-                alt={item.title}
-                width={70}
-                style={{ borderRadius: 8 }}
-              />
-
-              <Box flex={1}>
-                <Typography fontWeight={600}>{item.title}</Typography>
-                <Typography variant="body2">
-                  Cantidad: {item.quantity}
-                </Typography>
+              {/* HEADER */}
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography fontWeight={600}>Pedido #{order.id?.slice(0, 8)}</Typography>
+                <Chip
+                  label={order.paymentMethod}
+                  color={
+                    order.paymentMethod === "efectivo"
+                      ? "success"
+                      : order.paymentMethod === "tarjeta"
+                        ? "primary"
+                        : "warning"
+                  }
+                />
               </Box>
 
-              <Typography fontWeight={600}>
-                ${item.price.toLocaleString()}
+              {/* FECHA */}
+              <Typography variant="body2" color="text.secondary" mb={2}>
+                {format(date, "dd MMM yyyy, HH:mm", { locale: es })}
               </Typography>
+
+              {/* DIRECCIÓN (si existe) */}
+              {order.address && (
+                <Typography variant="body2" color="text.secondary" mb={2}>
+                  📍 {order.address}
+                </Typography>
+              )}
+
+              <Divider sx={{ mb: 2 }} />
+
+              {/* ITEMS */}
+              <Stack spacing={2}>
+                {order.products.map((p: any) => (
+                  <Stack key={p.id} direction="row" spacing={2} alignItems="center">
+                    <Avatar
+                      src={p.image}
+                      alt={p.name}
+                      sx={{ width: 56, height: 56, borderRadius: 2 }}
+                    />
+                    <Box flex={1}>
+                      <Typography fontWeight={600}>{p.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Cantidad: {p.quantity} | Precio: ${p.price.toLocaleString()} | Total: $
+                        {Number(p.total ?? Number(p.price) * p.quantity).toLocaleString()}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                ))}
+              </Stack>
+
+              <Divider sx={{ my: 2 }} />
+
+              {/* TOTAL */}
+              <Box display="flex" justifyContent="flex-end">
+                <Typography fontWeight={700} variant="subtitle1">
+                  Total: ${totalGeneral.toLocaleString()}
+                </Typography>
+              </Box>
             </Box>
-          ))}
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* TOTAL */}
-          <Box display="flex" justifyContent="flex-end">
-            <Typography fontWeight={700}>
-              Total: ${order.total.toLocaleString()}
-            </Typography>
-          </Box>
-        </Box>
-      ))}
+          );
+        })}
     </Container>
   );
 };
