@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { CartItem } from "../CartItem";
 import { useCart } from "../../hook/useCart";
 import { useMemo, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -107,8 +108,7 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                 </Total>
 
                 <CheckoutButton
-                  onClick={handleCheckout}
-                  disabled={loading}
+                  to="/checkout"
                 >
                   {loading ? "PROCESANDO..." : "IR A PAGAR"}
                 </CheckoutButton>
@@ -193,7 +193,7 @@ const Total = styled.div`
   margin-bottom: 12px;
 `;
 
-const CheckoutButton = styled.button`
+const CheckoutButton = styled(NavLink)`
   width: 100%;
   padding: 14px;
   border-radius: 12px;
@@ -202,9 +202,5 @@ const CheckoutButton = styled.button`
   border: none;
   font-size: 14px;
   cursor: pointer;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+   text-decoration: none;
 `;

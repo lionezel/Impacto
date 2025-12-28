@@ -14,6 +14,7 @@ import { RestaurantId } from "../global/restaurantId";
 export interface CartItem {
   productId: string;
   title: string;
+  name: string;
   price: number;
   image: string;
   quantity: number;

@@ -1,45 +1,53 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { defineSecret } from "firebase-functions/params";
-import MercadoPagoConfig, { Preference } from "mercadopago";
+import { MercadoPagoConfig, Payment } from "mercadopago";
+import express from "express";
 
-const MP_ACCESS_TOKEN = defineSecret("MP_ACCESS_TOKEN");
+const app = express();
+app.use(express.json());
 
-export const createPreference = onRequest(
-  { secrets: [MP_ACCESS_TOKEN] },
-  async (req, res) => {
-    try {
-      const client = new MercadoPagoConfig({
-        accessToken: MP_ACCESS_TOKEN.value(),
-      });
-
-      const preference = new Preference(client);
-
-      const { items } = req.body;
-
-     const result = await preference.create({
-  body: {
-    items: items.map((item: any) => ({
-      id: String(item.productId),
-      title: String(item.title),
-      quantity: Number(item.quantity),
-      unit_price: Number(item.price),
-      currency_id: "COP",
-    })),
-    back_urls: {
-      success: "http://localhost:5173/pago-exitoso",
-      failure: "http://localhost:5173/pago-fallido",
-      pending: "http://localhost:5173/pago-pendiente",
-    },
-    auto_return: "approved",
-  },
+const mpClient = new MercadoPagoConfig({
+  accessToken: process.env.MP_ACCESS_TOKEN!,
 });
-      res.json({
-        id: result.id,
-        init_point: result.init_point,
+
+app.post("/", async (req, res) => {
+  try {
+    const {
+      token,
+      transaction_amount,
+      payment_method_id,
+    } = req.body;
+
+    console.log("RECIBIDO >>>", req.body);
+
+    if (!token || !transaction_amount || !payment_method_id) {
+      return res.status(400).json({
+        error: "Datos incompletos",
+        received: req.body,
       });
-    } catch (error: any) {
-      console.error("MP ERROR:", error);
-      res.status(500).json(error);
     }
+
+    const payment = new Payment(mpClient);
+
+    const result = await payment.create({
+      body: {
+        transaction_amount,
+        token,
+        payment_method_id,
+        installments: 1, // 🔥 SIEMPRE UNA SOLA CUOTA
+        description: "Pago sin cuotas",
+      },
+    });
+
+    console.log("PAGO STATUS >>>", result.status);
+
+    res.status(200).json(result);
+  } catch (error: any) {
+    console.error("ERROR MP >>>", error);
+    res.status(500).json({
+      error: error?.message || "Error Mercado Pago",
+      details: error,
+    });
   }
-);
+});
+
+export const createPayment = onRequest(app);

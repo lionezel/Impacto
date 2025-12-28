@@ -2,9 +2,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CatalogPage, Checkout, Failure, HomePage, LoginPage, Pending, ProfilePage, Success, VerifyPage } from './page';
 import './App.css';
 import { AuthProvider } from './auth/AuthProvider';
+import { initMercadoPago } from '@mercadopago/sdk-react';
 
-function App() {
+function App() { 
+  initMercadoPago(process.env.REACT_APP_MP_PUBLIC_KEY!);
   return (
+    
     <AuthProvider>
       <BrowserRouter>
         <Routes>
