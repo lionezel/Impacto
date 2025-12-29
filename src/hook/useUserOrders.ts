@@ -22,7 +22,9 @@ export interface OrderItem {
 export interface Order {
     id: string;
     products: OrderItem[];
-    total?: number; // opcional si quieres calcularlo dinámicamente
+    total?: number;
+    phone: string;
+    state: "pendiente" | "enProceso" | "enCamino" | "completada" | "cancelada";
     paymentMethod: "efectivo" | "tarjeta" | "transferencia";
     orderType: "llevar" | "comerAca";
     address?: string;

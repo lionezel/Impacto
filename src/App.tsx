@@ -3,6 +3,8 @@ import { CatalogPage, Checkout, Failure, HomePage, LoginPage, Pending, ProfilePa
 import './App.css';
 import { AuthProvider } from './auth/AuthProvider';
 import { initMercadoPago } from '@mercadopago/sdk-react';
+import { ProductDetail } from './page/productDetail';
+
 
 function App() { 
   initMercadoPago(process.env.REACT_APP_MP_PUBLIC_KEY!);
@@ -12,6 +14,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/catalog/:slug" element={<CatalogPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/verify" element={<VerifyPage />} />

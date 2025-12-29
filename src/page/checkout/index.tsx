@@ -48,7 +48,9 @@ export const Checkout = () => {
         await addDoc(collection(db, "restaurants", RestaurantId, "orders"), {
           name,
           userId: user.uid,
-          orderType: "llevar", // o comerAca (si tienes selector)
+          orderType: "llevar",
+          phone,
+          state: "pendiente",
           paymentMethod: "efectivo",
           products: cart.map((item) => ({
             id: item.productId,

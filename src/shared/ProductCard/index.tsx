@@ -27,7 +27,7 @@ export const ProductCard = ({ product }: Props) => {
   };
 
   return (
-    <Card>
+    <Card onClick={() => navigate(`/products/${product.id}`)}>
       <ImageWrapper>
         <img src={product.image} alt={product.name} />
       </ImageWrapper>
