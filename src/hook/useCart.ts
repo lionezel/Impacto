@@ -7,15 +7,17 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { db } from "../firebase/config";
 import { useAuth } from "./useAuth";
 import { RestaurantId } from "../global/restaurantId";
 
 export interface CartItem {
+  cartItemId: string;
   productId: string;
-  title: string;
+  variantId: string;
   name: string;
+  variantLabel: string;
   price: number;
   image: string;
   quantity: number;
@@ -26,9 +28,11 @@ export const useCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔄 Escuchar carrito en tiempo real
   useEffect(() => {
     if (!user) {
       setCart([]);
+      setLoading(false);
       return;
     }
 
@@ -42,9 +46,11 @@ export const useCart = () => {
     );
 
     const unsub = onSnapshot(ref, (snap) => {
-      const data = snap.docs.map(
-        (d) => d.data() as CartItem
-      );
+      const data: CartItem[] = snap.docs.map((d) => ({
+        cartItemId: d.id,
+        ...(d.data() as Omit<CartItem, "cartItemId">),
+      }));
+
       setCart(data);
       setLoading(false);
     });
@@ -52,23 +58,35 @@ export const useCart = () => {
     return () => unsub();
   }, [user]);
 
+  // 🧮 CONTADOR TOTAL (SUMA DE CANTIDADES)
+  const cartCount = useMemo(() => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  }, [cart]);
+
+  // ➕ Agregar / mergear item
   const addToCart = async (item: CartItem) => {
     if (!user) return;
 
-    const ref = doc(
-      db,
-      "restaurants",
-      RestaurantId,
-      "carts",
-      user.uid,
-      "items",
-      item.productId
+    await setDoc(
+      doc(
+        db,
+        "restaurants",
+        RestaurantId,
+        "carts",
+        user.uid,
+        "items",
+        item.cartItemId
+      ),
+      item,
+      { merge: true }
     );
-
-    await setDoc(ref, item, { merge: true });
   };
 
-  const updateQuantity = async (productId: string, quantity: number) => {
+  // 🔢 Actualizar cantidad
+  const updateQuantity = async (
+    cartItemId: string,
+    quantity: number
+  ) => {
     if (!user || quantity < 1) return;
 
     await updateDoc(
@@ -79,13 +97,14 @@ export const useCart = () => {
         "carts",
         user.uid,
         "items",
-        productId
+        cartItemId
       ),
       { quantity }
     );
   };
 
-  const removeFromCart = async (productId: string) => {
+  // ❌ Eliminar variante
+  const removeFromCart = async (cartItemId: string) => {
     if (!user) return;
 
     await deleteDoc(
@@ -96,38 +115,35 @@ export const useCart = () => {
         "carts",
         user.uid,
         "items",
-        productId
+        cartItemId
       )
     );
   };
 
+  // 🧹 Vaciar carrito
   const clearCart = async () => {
-  if (!user) return;
+    if (!user) return;
 
-  const ref = collection(
-    db,
-    "restaurants",
-    RestaurantId,
-    "carts",
-    user.uid,
-    "items"
-  );
+    const ref = collection(
+      db,
+      "restaurants",
+      RestaurantId,
+      "carts",
+      user.uid,
+      "items"
+    );
 
-  const snap = await getDocs(ref);
-
-  const deletes = snap.docs.map((docu) =>
-    deleteDoc(docu.ref)
-  );
-
-  await Promise.all(deletes);
-};
+    const snap = await getDocs(ref);
+    await Promise.all(snap.docs.map((d) => deleteDoc(d.ref)));
+  };
 
   return {
     cart,
+    cartCount, // 👈 EXPORTAMOS EL CONTADOR
     loading,
     addToCart,
     updateQuantity,
     removeFromCart,
-    clearCart
+    clearCart,
   };
 };

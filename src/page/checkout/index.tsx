@@ -8,11 +8,12 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { RestaurantId } from "../../global/restaurantId";
 import { useNavigate } from "react-router-dom";
+import { NavbarLight } from "../../shared/NabvarLight";
 
 export const Checkout = () => {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
-  
+
   const auth = getAuth();
   const user = auth.currentUser;
 
@@ -97,127 +98,130 @@ export const Checkout = () => {
   };
 
   return (
-    <Page>
-      <Content>
-        {/* IZQUIERDA */}
-        <Main>
-          <Block>
-            <Title>Contacto</Title>
-            <Input
-              value={user?.email || ""}
-              disabled
-              placeholder="Correo electrónico"
-            />
-          </Block>
-
-          <Block>
-            <Title>Entrega</Title>
-            <Grid>
+    <>
+      <NavbarLight />
+      <Page>
+        <Content>
+          {/* IZQUIERDA */}
+          <Main>
+            <Block>
+              <Title>Contacto</Title>
               <Input
-                placeholder="Nombre completo"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={user?.email || ""}
+                disabled
+                placeholder="Correo electrónico"
               />
-              <Input
-                placeholder="Dirección"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <Input
-                placeholder="Ciudad"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-              <Input
-                placeholder="Teléfono"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </Grid>
-          </Block>
+            </Block>
 
-          <Block>
-            <Title>Pago</Title>
+            <Block>
+              <Title>Entrega</Title>
+              <Grid>
+                <Input
+                  placeholder="Nombre completo"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <Input
+                  placeholder="Dirección"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+                <Input
+                  placeholder="Ciudad"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+                <Input
+                  placeholder="Teléfono"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </Grid>
+            </Block>
 
-            <PaymentOption>
-              <input
-                type="radio"
-                checked={paymentMethod === "cash"}
-                onChange={() => setPaymentMethod("cash")}
-              />
-              <span>Efectivo contra entrega</span>
-            </PaymentOption>
+            <Block>
+              <Title>Pago</Title>
 
-            <PaymentOption>
-              <input
-                type="radio"
-                checked={paymentMethod === "card"}
-                onChange={() => setPaymentMethod("card")}
-              />
-              <span>Pagar con tarjeta (Mercado Pago)</span>
-            </PaymentOption>
-          </Block>
+              <PaymentOption>
+                <input
+                  type="radio"
+                  checked={paymentMethod === "cash"}
+                  onChange={() => setPaymentMethod("cash")}
+                />
+                <span>Efectivo contra entrega</span>
+              </PaymentOption>
 
-          <PayButton onClick={handlePay}>
-            Pagar ${total.toLocaleString("es-CO")}
-          </PayButton>
-        </Main>
+              <PaymentOption>
+                <input
+                  type="radio"
+                  checked={paymentMethod === "card"}
+                  onChange={() => setPaymentMethod("card")}
+                />
+                <span>Pagar con tarjeta (Mercado Pago)</span>
+              </PaymentOption>
+            </Block>
 
-        {/* DERECHA */}
-        <Sidebar>
-          <OrderTitle>Resumen del pedido</OrderTitle>
+            <PayButton onClick={handlePay}>
+              Pagar ${total.toLocaleString("es-CO")}
+            </PayButton>
+          </Main>
 
-          {cart.map((item) => (
-            <Item key={item.productId}>
-              <ItemInfo>
-                <Image src={item.image} />
-                <div>
-                  <ItemName>{item.name}</ItemName>
-                  <ItemQty>x {item.quantity}</ItemQty>
-                </div>
-              </ItemInfo>
+          {/* DERECHA */}
+          <Sidebar>
+            <OrderTitle>Resumen del pedido</OrderTitle>
 
-              <ItemPrice>
-                ${(item.price * item.quantity).toLocaleString("es-CO")}
-              </ItemPrice>
-            </Item>
-          ))}
+            {cart.map((item) => (
+              <Item key={item.productId}>
+                <ItemInfo>
+                  <Image src={item.image} />
+                  <div>
+                    <ItemName>{item.name}</ItemName>
+                    <ItemQty>x {item.quantity}</ItemQty>
+                  </div>
+                </ItemInfo>
 
-          <Divider />
+                <ItemPrice>
+                  ${(item.price * item.quantity).toLocaleString("es-CO")}
+                </ItemPrice>
+              </Item>
+            ))}
 
-          <Row>
-            <span>Subtotal</span>
-            <span>${subtotal.toLocaleString("es-CO")}</span>
-          </Row>
+            <Divider />
 
-          <Row>
-            <span>Descuento</span>
-            <span>- ${discount.toLocaleString("es-CO")}</span>
-          </Row>
+            <Row>
+              <span>Subtotal</span>
+              <span>${subtotal.toLocaleString("es-CO")}</span>
+            </Row>
 
-          <Row>
-            <span>Envío</span>
-            <span>Gratis</span>
-          </Row>
+            <Row>
+              <span>Descuento</span>
+              <span>- ${discount.toLocaleString("es-CO")}</span>
+            </Row>
 
-          <Row>
-            <span>Impuestos</span>
-            <span>${taxes.toLocaleString("es-CO")}</span>
-          </Row>
+            <Row>
+              <span>Envío</span>
+              <span>Gratis</span>
+            </Row>
 
-          <Divider />
+            <Row>
+              <span>Impuestos</span>
+              <span>${taxes.toLocaleString("es-CO")}</span>
+            </Row>
 
-          <TotalRow>
-            <span>Total</span>
-            <strong>${total.toLocaleString("es-CO")}</strong>
-          </TotalRow>
+            <Divider />
 
-          <TaxNote>
-            Incluye ${taxes.toLocaleString("es-CO")} de impuestos
-          </TaxNote>
-        </Sidebar>
-      </Content>
-    </Page>
+            <TotalRow>
+              <span>Total</span>
+              <strong>${total.toLocaleString("es-CO")}</strong>
+            </TotalRow>
+
+            <TaxNote>
+              Incluye ${taxes.toLocaleString("es-CO")} de impuestos
+            </TaxNote>
+          </Sidebar>
+        </Content>
+      </Page>
+    </>
   );
 };
 

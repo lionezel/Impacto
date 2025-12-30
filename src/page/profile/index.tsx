@@ -10,6 +10,7 @@ import {
 import { useUserOrders } from "../../hook/useUserOrders";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { NavbarLight } from "../../shared/NabvarLight";
 
 export const ProfilePage = () => {
   const { orders, loading } = useUserOrders();
@@ -46,6 +47,8 @@ export const ProfilePage = () => {
   };
 
   return (
+    <>
+    <NavbarLight />
     <Container maxWidth="md" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={700} mb={4}>
         Mis pedidos
@@ -126,5 +129,6 @@ export const ProfilePage = () => {
           );
         })}
     </Container>
+    </>
   );
 };

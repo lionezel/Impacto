@@ -3,10 +3,15 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useProductDetail } from "../../hook/useProductDetail";
 import { Variant } from "../../interfaces/product";
-
-
+import { useAuth } from "../../hook/useAuth";
+import { addToCart } from "../../services/cart.service";
+import { Navbar } from "../../shared";
+import { useCategory } from "../../hook/useCategory";
+import { NavbarLight } from "../../shared/NabvarLight";
 
 export const ProductDetail = () => {
+  const { category } = useCategory();
+  const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -23,7 +28,22 @@ export const ProductDetail = () => {
   if (error) return <State>{error}</State>;
   if (!product || !variantSelected) return null;
 
+  const handleAddToCart = async (
+      e: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      e.stopPropagation();
+  
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+  
+      await addToCart(user.uid, product, variantSelected);
+    };
+
   return (
+  <>  
+      <NavbarLight />
     <Container>
       {/* IMAGEN */}
       <Gallery>
@@ -56,7 +76,7 @@ export const ProductDetail = () => {
 
         <Divider />
 
-        <ButtonPrimary>AGREGAR AL CARRITO</ButtonPrimary>
+        <ButtonPrimary onClick={handleAddToCart}>AGREGAR AL CARRITO</ButtonPrimary>
         <ButtonSecondary>COMPRAR AHORA</ButtonSecondary>
 
         <Divider />
@@ -64,30 +84,47 @@ export const ProductDetail = () => {
         <Description>{product.description}</Description>
       </Info>
     </Container>
+    </>
   );
 };
 
+/* ===============================
+   LAYOUT
+================================ */
+
 const Container = styled.div`
   max-width: 1200px;
-  margin: 60px auto;
+  margin: 80px auto;
   padding: 0 20px;
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+    gap: 40px;
   }
 `;
 
-const Gallery = styled.div``;
+const Gallery = styled.div`
+  width: 100%;
+`;
 
 const MainImage = styled.div`
-  background: #f5f5f5;
+  width: 100%;
+  background: #f6f6f6;
+  border-radius: 12px;
+  overflow: hidden;
+
   img {
     width: 100%;
-    max-height: 520px;
+    height: 520px;
     object-fit: cover;
+
+    @media (max-width: 900px) {
+      height: 360px;
+    }
   }
 `;
 
@@ -96,65 +133,115 @@ const Info = styled.div`
   flex-direction: column;
 `;
 
+/* ===============================
+   TYPOGRAPHY
+================================ */
+
 const Category = styled.span`
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 2px;
-  color: #777;
+  color: #888;
+  text-transform: uppercase;
 `;
 
 const Title = styled.h1`
   font-size: 26px;
-  margin: 16px 0;
+  margin: 14px 0 10px;
+  font-weight: 600;
+  line-height: 1.2;
 `;
 
 const Price = styled.span`
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 700;
+  margin-bottom: 10px;
 `;
+
+const Description = styled.p`
+  font-size: 14px;
+  line-height: 1.7;
+  color: #555;
+`;
+
+/* ===============================
+   VARIANTS
+================================ */
 
 const Variants = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin: 24px 0;
 `;
 
 const VariantButton = styled.button<{ $active: boolean }>`
-  padding: 10px 16px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 13px;
   border: 1px solid ${({ $active }) => ($active ? "#000" : "#ccc")};
   background: ${({ $active }) => ($active ? "#000" : "#fff")};
   color: ${({ $active }) => ($active ? "#fff" : "#000")};
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #000;
+  }
 `;
 
-const Divider = styled.hr`
-  margin: 24px 0;
-  border: none;
-  border-top: 1px solid #eee;
-`;
+/* ===============================
+   BUTTONS
+================================ */
 
 const ButtonPrimary = styled.button`
   padding: 14px;
+  border-radius: 8px;
   background: #000;
   color: #fff;
   border: none;
-  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  margin-bottom: 12px;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #222;
+  }
 `;
 
 const ButtonSecondary = styled.button`
   padding: 14px;
+  border-radius: 8px;
   background: #444;
   color: #fff;
   border: none;
+  font-size: 14px;
   cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #333;
+  }
 `;
 
-const Description = styled.p`
-  font-size: 14px;
-  line-height: 1.6;
+/* ===============================
+   SEPARATORS
+================================ */
+
+const Divider = styled.hr`
+  margin: 28px 0;
+  border: none;
+  border-top: 1px solid #eee;
 `;
+
+/* ===============================
+   STATES
+================================ */
 
 const State = styled.div`
   padding: 80px;
   text-align: center;
+  font-size: 16px;
+  color: #666;
 `;

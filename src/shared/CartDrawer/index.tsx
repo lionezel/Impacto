@@ -82,19 +82,22 @@ export const CartDrawer = ({ open, onClose }: Props) => {
               <Empty>TU CARRITO ESTÁ VACÍO</Empty>
             ) : (
               <Content>
-                {cart.map(item => (
+                {cart.map((item) => (
                   <CartItem
-                    key={item.productId}
+                    key={item.cartItemId}
                     item={item}
-                    onRemove={() => removeFromCart(item.productId)}
                     onIncrease={() =>
-                      updateQuantity(item.productId, item.quantity + 1)
+                      updateQuantity(item.cartItemId, item.quantity + 1)
                     }
                     onDecrease={() =>
-                      updateQuantity(item.productId, item.quantity - 1)
+                      updateQuantity(item.cartItemId, item.quantity - 1)
+                    }
+                    onRemove={() =>
+                      removeFromCart(item.cartItemId)
                     }
                   />
                 ))}
+
               </Content>
             )}
 

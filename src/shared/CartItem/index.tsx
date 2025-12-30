@@ -1,25 +1,43 @@
 import styled from "styled-components";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { CartItem as CartItemType } from "../../hook/useCart";
 
 interface Props {
-  item: any;
+  item: CartItemType;
   onRemove: () => void;
   onIncrease: () => void;
   onDecrease: () => void;
 }
 
-export const CartItem = ({ item, onRemove, onIncrease, onDecrease }: Props) => {
+export const CartItem = ({
+  item,
+  onRemove,
+  onIncrease,
+  onDecrease,
+}: Props) => {
   return (
     <Item>
-      <Image src={item.image} />
+      <Image src={item.image} alt={item.name} />
 
       <Info>
-        <Title>{item.title}</Title>
-        <Price>${item.price.toLocaleString("es-CO")}</Price>
+        <Title>
+          {item.name} <Variant>({item.variantLabel})</Variant>
+        </Title>
+
+        <Price>
+          ${item.price.toLocaleString("es-CO")}
+        </Price>
 
         <Quantity>
-          <button onClick={onDecrease}>−</button>
+          <button
+            onClick={onDecrease}
+            disabled={item.quantity === 1}
+          >
+            −
+          </button>
+
           <span>{item.quantity}</span>
+
           <button onClick={onIncrease}>+</button>
         </Quantity>
       </Info>
@@ -54,6 +72,11 @@ const Title = styled.h4`
   margin: 0 0 4px;
 `;
 
+const Variant = styled.span`
+  font-size: 12px;
+  color: #666;
+`;
+
 const Price = styled.p`
   font-size: 14px;
   font-weight: 600;
@@ -71,6 +94,11 @@ const Quantity = styled.div`
     border-radius: 50%;
     border: 1px solid #ccc;
     cursor: pointer;
+  }
+
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 `;
 
