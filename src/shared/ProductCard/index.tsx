@@ -1,15 +1,16 @@
-import { Product } from "../../interfaces/product";
 import styled from "styled-components";
-
 import { useNavigate } from "react-router-dom";
-import { addToCart } from "../../services/cart.service";
+
+import { Product, Variant } from "../../interfaces/product";
 import { useAuth } from "../../hook/useAuth";
+import { addToCart } from "../../services/cart.service";
 
 interface Props {
   product: Product;
+  variant: Variant;
 }
 
-export const ProductCard = ({ product }: Props) => {
+export const ProductCard = ({ product, variant }: Props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -23,20 +24,20 @@ export const ProductCard = ({ product }: Props) => {
       return;
     }
 
-    await addToCart(user.uid, product);
+    await addToCart(user.uid, product, variant);
   };
 
   return (
     <Card onClick={() => navigate(`/products/${product.id}`)}>
       <ImageWrapper>
-        <img src={product.image} alt={product.name} />
+        <img src={variant.image} alt={product.name} />
       </ImageWrapper>
 
       <Info>
         <Title>{product.name}</Title>
-        <Price>${product.price.toLocaleString("es-CO")}</Price>
+        <Price>${variant.price.toLocaleString("es-CO")}</Price>
 
-        <AddButton  onClick={handleAddToCart}>
+        <AddButton onClick={handleAddToCart}>
           Agregar al carrito
         </AddButton>
       </Info>

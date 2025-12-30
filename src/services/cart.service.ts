@@ -1,11 +1,12 @@
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { Product } from "../interfaces/product";
+import { Product, Variant } from "../interfaces/product";
 import { RestaurantId } from "../global/restaurantId";
 
 export const addToCart = async (
     userId: string,
-    product: Product
+    product: Product,
+    variant: Variant
 ) => {
     const itemRef = doc(db, "restaurants", RestaurantId, "carts", userId, "items", product.id);
 
@@ -19,8 +20,8 @@ export const addToCart = async (
         await setDoc(itemRef, {
             productId: product.id,
             name: product.name,
-            price: product.price,
-            image: product.image,
+            price: variant.price,
+            image: variant.image,
             quantity: 1,
             createdAt: serverTimestamp(),
         });

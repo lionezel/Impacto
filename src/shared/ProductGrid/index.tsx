@@ -9,9 +9,19 @@ interface Props {
 export const ProductGrid = ({ products }: Props) => {
   return (
     <Grid>
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+      {products.map((product) => {
+        const baseVariant = product.variants[0];
+
+        if (!baseVariant) return null;
+
+        return (
+          <ProductCard
+            key={`${product.id}_${baseVariant.id}`}
+            product={product}
+            variant={baseVariant}
+          />
+        );
+      })}
     </Grid>
   );
 };
