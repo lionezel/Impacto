@@ -37,9 +37,9 @@ export const createPreference = functions.https.onRequest(async (req, res) => {
             },
           ],
           back_urls: {
-            success: "https://store-d17ce.web.app/pago-exitoso",
-            failure: "https://store-d17ce.web.app/pago-error",
-            pending: "https://store-d17ce.web.app/pago-pendiente",
+            success: "https://store-d17ce.web.app/checkout/success",
+            failure: "https://store-d17ce.web.app/checkout/failure",
+            pending: "https://store-d17ce.web.app/checkout/pending",
           },
           auto_return: "approved",
         }),
