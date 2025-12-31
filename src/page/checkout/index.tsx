@@ -79,7 +79,7 @@ export const Checkout = () => {
     // TARJETA (MERCADO PAGO)
     // ======================
     const res = await fetch(
-      "http://localhost:5001/store-d17ce/us-central1/createPreference",
+      "https://store-d17ce.web.app/store-d17ce/us-central1/createPreference",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -160,10 +160,6 @@ export const Checkout = () => {
                 <span>Pagar con tarjeta (Mercado Pago)</span>
               </PaymentOption>
             </Block>
-
-            <PayButton onClick={handlePay}>
-              Pagar ${total.toLocaleString("es-CO")}
-            </PayButton>
           </Main>
 
           {/* DERECHA */}
@@ -218,6 +214,10 @@ export const Checkout = () => {
             <TaxNote>
               Incluye ${taxes.toLocaleString("es-CO")} de impuestos
             </TaxNote>
+
+            <PayButton onClick={handlePay}>
+              Pagar ${total.toLocaleString("es-CO")}
+            </PayButton>
           </Sidebar>
         </Content>
       </Page>
@@ -233,14 +233,22 @@ const Page = styled.div`
   background: #fafafa;
   min-height: 100vh;
   padding: 40px 20px;
-`;
 
+  @media (max-width: 640px) {
+    padding: 20px 12px;
+  }
+`;
 const Content = styled.div`
   max-width: 1200px;
   margin: auto;
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 48px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 `;
 
 const Main = styled.div``;
@@ -250,6 +258,10 @@ const Sidebar = styled.div`
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
 `;
 
 const Block = styled.div`
@@ -274,6 +286,10 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const PaymentOption = styled.label`
@@ -296,6 +312,12 @@ const PayButton = styled.button`
   font-size: 16px;
   border: none;
   cursor: pointer;
+
+  @media (max-width: 640px) {
+    position: sticky;
+    bottom: 12px;
+    z-index: 20;
+  }
 `;
 
 const OrderTitle = styled.h3`
