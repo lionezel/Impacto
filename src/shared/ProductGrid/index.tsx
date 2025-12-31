@@ -28,7 +28,19 @@ export const ProductGrid = ({ products }: Props) => {
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 24px;
   padding: 24px;
+
+  /* MOBILE: 2 productos por fila */
+  grid-template-columns: repeat(2, 1fr);
+
+  /* TABLET */
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  /* DESKTOP */
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
 `;

@@ -10,8 +10,7 @@ import { GlobalAlert } from "../../global/GlobalAlert";
 
 interface Props {
   product: Product;
-  variant?: Variant;
-  view?: "grid" | "carousel" | "list";
+  variant: Variant;
 }
 
 export const ProductCard = ({ product, variant }: Props) => {
@@ -95,8 +94,12 @@ const ImageWrapper = styled.div`
 `;
 
 const Info = styled.div`
-  padding: 14px;
+  padding: 10px;
   text-align: center;
+
+  @media (max-width: 640px) {
+    padding: 8px;
+  }
 `;
 
 const Title = styled.h3`
