@@ -36,6 +36,7 @@ export const createPreference = functions.https.onRequest(async (req, res) => {
               currency_id: "COP",
             },
           ],
+          external_reference: "checkout",
           back_urls: {
             success: "https://store-d17ce.web.app/checkout/success",
             failure: "https://store-d17ce.web.app/checkout/failure",
