@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GenericCarousel, ProductCard } from "../../../../shared";
+import { GenericCarousel } from "../../../../shared";
 import { useCarousels } from "../../../../hook/useCarousels";
 import { Carousel } from "../../../../interfaces/Carousel";
 import { getProductsByIds } from "../../../../services/products.service";

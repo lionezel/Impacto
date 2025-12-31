@@ -1,5 +1,4 @@
-// hooks/useCarousels.ts
-import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { RestaurantId } from "../global/restaurantId";
 import { Carousel } from "../interfaces/Carousel";
