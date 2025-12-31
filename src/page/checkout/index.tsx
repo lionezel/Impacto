@@ -34,75 +34,34 @@ export const Checkout = () => {
   const total = subtotal - discount + shipping + taxes;
 
   const handlePay = async () => {
-    if (!user) {
-      alert("Debes iniciar sesión");
-      return;
-    }
+    try {
+      const res = await fetch(
+        "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            total: 50000, // 🔥 MONTO REAL
+          }),
+        }
+      );
 
-    if (!name || !address || !city || !phone) {
-      alert("Completa todos los datos de entrega");
-      return;
-    }
+      const data = await res.json();
+      console.log("MP RESPONSE 👉", data);
 
-    if (paymentMethod === "cash") {
-      try {
-        await addDoc(collection(db, "restaurants", RestaurantId, "orders"), {
-          name,
-          userId: user.uid,
-          orderType: "llevar",
-          phone,
-          state: "pendiente",
-          paymentMethod: "efectivo",
-          products: cart.map((item) => ({
-            id: item.productId,
-            name: item.name,
-            image: item.image,
-            price: item.price,
-            quantity: item.quantity,
-            total: item.price * item.quantity,
-          })),
-          address: address,
-          date: serverTimestamp(),
-        });
-        clearCart();
-        navigate("/");
-        alert("Pedido confirmado. Revisa tu correo 📧");
-        return;
-      } catch (error) {
-        console.error(error);
-        alert("Error al crear el pedido");
+      // 🔴 VALIDACIÓN CLAVE (evita /undefined)
+      if (!data.init_point) {
+        alert("Error al crear el pago");
         return;
       }
+
+      window.location.href = data.init_point;
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con Mercado Pago");
     }
-
-    // ======================
-    // TARJETA (MERCADO PAGO)
-    // ======================
-    const res = await fetch(
-      "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          total,
-          orderId: "ORD_" + Date.now(),
-        }),
-      }
-    );
-
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("Error respuesta:", text);
-      alert("Error al crear el pago");
-      return;
-    }
-
-    const data = await res.json();
-
-
-    window.location.href = data.init_point;
   };
 
   return (
