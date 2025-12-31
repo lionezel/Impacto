@@ -82,16 +82,48 @@ export const Navbar = ({ category, cartCount = 0 }: Props) => {
         {open && (
           <MobileMenu
             as={motion.ul}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
             transition={{ duration: 0.35 }}
           >
+
+            {/* USUARIO */}
+            <MobileUser>
+              {user ? (
+                <>
+                  <PersonOutlineIcon />
+                  <span>{user.email}</span>
+                </>
+              ) : (
+                <button onClick={() => navigate("/login")}>
+                  Iniciar sesión
+                </button>
+              )}
+            </MobileUser>
+
+            {/* CATEGORÍAS */}
             {category.map((item) => (
               <li key={item.id} onClick={() => setOpen(false)}>
-                <NavLink to={`/${item.slug}`}>{item.name}</NavLink>
+                <NavLink to={`/catalog/${item.name}`}>
+                  {item.name}
+                </NavLink>
               </li>
             ))}
+
+            {/* ACCIONES */}
+            <MobileActions>
+              <button onClick={() => setCartOpen(true)}>
+                <ShoppingBagOutlinedIcon />
+                Carrito
+              </button>
+
+              <button>
+                <SearchIcon />
+                Buscar
+              </button>
+            </MobileActions>
+
           </MobileMenu>
         )}
       </AnimatePresence>
@@ -196,13 +228,67 @@ const Toggle = styled.button`
 `;
 
 const MobileMenu = styled.ul`
-  position: absolute;
+  position: fixed;
   top: 64px;
   left: 0;
   width: 100%;
-  background: rgba(20, 20, 20, 0.95);
+  height: calc(100vh - 64px);
+  background: rgba(20, 20, 20, 0.98);
   backdrop-filter: blur(8px);
   list-style: none;
-  padding: 24px 0;
-  text-align: center;
+  padding: 0;
+  z-index: 999;
+
+  li {
+    padding: 16px;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+  }
+`;
+
+
+const MobileUser = styled.div`
+  padding: 16px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+
+  button {
+    width: 100%;
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+`;
+
+const MobileActions = styled.div`
+  margin-top: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  button {
+    width: 100%;
+    padding: 14px;
+    background: #000;
+    color: white;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+  }
 `;

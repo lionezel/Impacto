@@ -8,16 +8,8 @@ import {
   Divider,
   Avatar,
 } from "@mui/material";
+import { ProductDetailProps } from "../../../../interfaces/ProductDetail";
 
-interface ProductDetailProps {
-  product: {
-    name: string;
-    category: string;
-    price: number;
-    images: string[];
-    description: string;
-  };
-}
 
 export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
@@ -25,7 +17,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
       <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
-        {/* IMAGEN PRINCIPAL Y MINIATURAS */}
         <Box flex={1}>
           <Box
             component="img"
@@ -52,7 +43,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
           </Stack>
         </Box>
 
-        {/* DETALLE DEL PRODUCTO */}
         <Box flex={1}>
           <Typography variant="overline" color="text.secondary">
             {product.category.toUpperCase()}

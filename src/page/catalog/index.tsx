@@ -1,15 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useProducts } from "../../hook/useProducts";
 import { ProductGrid } from "../../shared/ProductGrid";
-import styled from "styled-components";
-import { Navbar } from "../../shared";
+import { HeroBanner, Navbar } from "../../shared";
 import { useCategory } from "../../hook/useCategory";
-import { HeroBanner } from "../home/shared";
+import styled from "styled-components";
+
 
 export const CatalogPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { products } = useProducts();
-  const { category, loading } = useCategory();
+  const { category } = useCategory();
 
   const filtered = products.filter(
     (p) => p.category === slug

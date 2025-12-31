@@ -1,16 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useProductDetail } from "../../hook/useProductDetail";
 import { Variant } from "../../interfaces/product";
 import { useAuth } from "../../hook/useAuth";
 import { addToCart } from "../../services/cart.service";
-import { Navbar } from "../../shared";
-import { useCategory } from "../../hook/useCategory";
 import { NavbarLight } from "../../shared/NabvarLight";
+import styled from "styled-components";
 
 export const ProductDetail = () => {
-  const { category } = useCategory();
   const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -29,68 +26,64 @@ export const ProductDetail = () => {
   if (!product || !variantSelected) return null;
 
   const handleAddToCart = async (
-      e: React.MouseEvent<HTMLButtonElement>
-    ) => {
-      e.stopPropagation();
-  
-      if (!user) {
-        navigate("/login");
-        return;
-      }
-  
-      await addToCart(user.uid, product, variantSelected);
-    };
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.stopPropagation();
+
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    await addToCart(user.uid, product, variantSelected);
+  };
 
   return (
-  <>  
+    <>
       <NavbarLight />
-    <Container>
-      {/* IMAGEN */}
-      <Gallery>
-        <MainImage>
-          <img src={variantSelected.image} alt={product.name} />
-        </MainImage>
-      </Gallery>
+      <Container>
+        {/* IMAGEN */}
+        <Gallery>
+          <MainImage>
+            <img src={variantSelected.image} alt={product.name} />
+          </MainImage>
+        </Gallery>
 
-      {/* INFO */}
-      <Info>
-        <Category>{product.category}</Category>
-        <Title>{product.name}</Title>
+        {/* INFO */}
+        <Info>
+          <Category>{product.category}</Category>
+          <Title>{product.name}</Title>
 
-        <Price>
-          ${variantSelected.price.toLocaleString("es-CO")}
-        </Price>
+          <Price>
+            ${variantSelected.price.toLocaleString("es-CO")}
+          </Price>
 
-        {/* VARIANTES */}
-        <Variants>
-          {product.variants.map((v) => (
-            <VariantButton
-              key={v.id}
-              $active={v.id === variantSelected.id}
-              onClick={() => setVariantSelected(v)}
-            >
-              {v.label}
-            </VariantButton>
-          ))}
-        </Variants>
+          {/* VARIANTES */}
+          <Variants>
+            {product.variants.map((v) => (
+              <VariantButton
+                key={v.id}
+                $active={v.id === variantSelected.id}
+                onClick={() => setVariantSelected(v)}
+              >
+                {v.label}
+              </VariantButton>
+            ))}
+          </Variants>
 
-        <Divider />
+          <Divider />
 
-        <ButtonPrimary onClick={handleAddToCart}>AGREGAR AL CARRITO</ButtonPrimary>
-        <ButtonSecondary>COMPRAR AHORA</ButtonSecondary>
+          <ButtonPrimary onClick={handleAddToCart}>AGREGAR AL CARRITO</ButtonPrimary>
+          <ButtonSecondary>COMPRAR AHORA</ButtonSecondary>
 
-        <Divider />
+          <Divider />
 
-        <Description>{product.description}</Description>
-      </Info>
-    </Container>
+          <Description>{product.description}</Description>
+        </Info>
+      </Container>
     </>
   );
 };
-
-/* ===============================
-   LAYOUT
-================================ */
 
 const Container = styled.div`
   max-width: 1200px;
@@ -133,10 +126,6 @@ const Info = styled.div`
   flex-direction: column;
 `;
 
-/* ===============================
-   TYPOGRAPHY
-================================ */
-
 const Category = styled.span`
   font-size: 11px;
   letter-spacing: 2px;
@@ -163,10 +152,6 @@ const Description = styled.p`
   color: #555;
 `;
 
-/* ===============================
-   VARIANTS
-================================ */
-
 const Variants = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -188,10 +173,6 @@ const VariantButton = styled.button<{ $active: boolean }>`
     border-color: #000;
   }
 `;
-
-/* ===============================
-   BUTTONS
-================================ */
 
 const ButtonPrimary = styled.button`
   padding: 14px;
@@ -225,19 +206,11 @@ const ButtonSecondary = styled.button`
   }
 `;
 
-/* ===============================
-   SEPARATORS
-================================ */
-
 const Divider = styled.hr`
   margin: 28px 0;
   border: none;
   border-top: 1px solid #eee;
 `;
-
-/* ===============================
-   STATES
-================================ */
 
 const State = styled.div`
   padding: 80px;

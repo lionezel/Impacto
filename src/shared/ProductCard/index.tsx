@@ -4,13 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { Product, Variant } from "../../interfaces/product";
 import { useAuth } from "../../hook/useAuth";
 import { addToCart } from "../../services/cart.service";
+import { useAlert } from "../../hook/useAlert";
+import { GlobalAlert } from "../../global/GlobalAlert";
+
 
 interface Props {
   product: Product;
-  variant: Variant;
+  variant?: Variant;
+  view?: "grid" | "carousel" | "list";
 }
 
 export const ProductCard = ({ product, variant }: Props) => {
+  const selectedVariant = variant ?? product.variants[0];
+  const { alert, showAlert, closeAlert } = useAlert();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -20,28 +26,45 @@ export const ProductCard = ({ product, variant }: Props) => {
     e.stopPropagation();
 
     if (!user) {
+      showAlert("Debes iniciar sesión para agregar productos", "warning");
       navigate("/login");
       return;
     }
 
-    await addToCart(user.uid, product, variant);
+    try {
+      await addToCart(user.uid, product, selectedVariant);
+
+      showAlert("Producto agregado al carrito", "success");
+    } catch (error) {
+      showAlert("Error al agregar el producto", "error");
+    }
   };
 
   return (
-    <Card onClick={() => navigate(`/products/${product.id}`)}>
-      <ImageWrapper>
-        <img src={variant.image} alt={product.name} />
-      </ImageWrapper>
+    <>
+      <Card onClick={() => navigate(`/products/${product.id}`)}>
+        <ImageWrapper>
+          <img src={variant?.image} alt={product.name} />
+        </ImageWrapper>
 
-      <Info>
-        <Title>{product.name}</Title>
-        <Price>${variant.price.toLocaleString("es-CO")}</Price>
+        <Info>
+          <Title>{product.name}</Title>
+          <Price>${variant?.price.toLocaleString("es-CO")}</Price>
 
-        <AddButton onClick={handleAddToCart}>
-          Agregar al carrito
-        </AddButton>
-      </Info>
-    </Card>
+          <AddButton onClick={handleAddToCart}>
+            Agregar al carrito
+          </AddButton>
+        </Info>
+      </Card>
+
+      {/* ALERTA GLOBAL */}
+      <GlobalAlert
+        open={alert.open}
+        message={alert.message}
+        severity={alert.severity}
+        onClose={closeAlert}
+      />
+    </>
   );
 };
 

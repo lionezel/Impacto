@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface Props {
   backgroundImage: string;
@@ -28,16 +28,39 @@ export const HeroBanner = ({
   );
 };
 
+const fadeZoom = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const slideUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+
 const NAVBAR_HEIGHT = 90;
 
 const Wrapper = styled.section`
   position: relative;
+  height: 75vh;
+  min-height: 420px;
   width: 100%;
-  height: 50vh;
-  min-height: 560px;
-  margin-top: -${NAVBAR_HEIGHT}px;
-  padding-top: ${NAVBAR_HEIGHT}px;
   overflow: hidden;
+    margin-top: -${NAVBAR_HEIGHT}px;
+  padding-top: ${NAVBAR_HEIGHT}px;
 `;
 
 const Background = styled.div<{ image: string }>`
@@ -46,55 +69,55 @@ const Background = styled.div<{ image: string }>`
   background-image: url(${({ image }) => image});
   background-size: cover;
   background-position: center;
-  transform: scale(1.08);
-  filter: grayscale(100%);
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35),
-    rgba(0, 0, 0, 0.65)
-  );
+  animation: ${fadeZoom} 1.4s ease-out forwards;
 `;
 
 const Content = styled.div`
   position: relative;
   z-index: 2;
   height: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 6%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
+  max-width: 700px;
 `;
 
 const Subtitle = styled.span`
-  font-size: 13px;
+color: white;
+  font-size: 14px;
   letter-spacing: 4px;
   text-transform: uppercase;
-  opacity: 0.85;
-  margin-bottom: 14px;
+  opacity: 0;
+  animation: ${slideUp} 0.8s ease-out forwards;
 `;
 
 const Title = styled.h1`
-  font-size: clamp(42px, 7vw, 84px);
-  font-weight: 700;
-  letter-spacing: 8px;
-  margin: 0;
-  line-height: 1.05;
+color: white;
+  font-size: clamp(42px, 6vw, 72px);
+  font-weight: 800;
+  margin: 12px 0;
+  opacity: 0;
+  animation: ${slideUp} 0.9s ease-out forwards;
+  animation-delay: 0.15s;
 `;
 
 const Description = styled.p`
-  margin-top: 20px;
-  font-size: 15px;
-  letter-spacing: 2px;
-  opacity: 0.85;
-  max-width: 600px;
+color: white;
+  font-size: 16px;
+  max-width: 480px;
+  opacity: 0;
+  animation: ${slideUp} 0.9s ease-out forwards;
+  animation-delay: 0.3s;
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.65),
+    rgba(0, 0, 0, 0.1)
+  );
+  z-index: 1;
 `;
