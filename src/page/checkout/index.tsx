@@ -79,7 +79,7 @@ export const Checkout = () => {
     // TARJETA (MERCADO PAGO)
     // ======================
     const res = await fetch(
-      "https://store-d17ce.web.app/store-d17ce/us-central1/createPreference",
+      "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
