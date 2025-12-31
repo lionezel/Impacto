@@ -92,12 +92,15 @@ export const Checkout = () => {
       }
     );
 
-    const data = await res.json();
-
-    if (!data.init_point) {
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Error respuesta:", text);
       alert("Error al crear el pago");
       return;
     }
+
+    const data = await res.json();
+
 
     window.location.href = data.init_point;
   };
