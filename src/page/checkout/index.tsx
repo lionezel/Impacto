@@ -82,8 +82,13 @@ export const Checkout = () => {
       "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ total }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          total,
+          orderId: "ORD_" + Date.now(),
+        }),
       }
     );
 
