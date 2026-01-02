@@ -10,7 +10,7 @@ import { useState } from "react";
 import { auth } from "../../firebase/config";
 import { useAlert } from "../../hook/useAlert";
 import { GlobalAlert } from "../../global/GlobalAlert";
-
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");

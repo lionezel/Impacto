@@ -6,7 +6,7 @@ import { Carousel } from "../interfaces/Carousel";
 export const useCarousels = () => {
     const getCarousels = async (): Promise<Carousel[]> => {
         const q = query(
-            collection(db, "restaurants", RestaurantId, "carouseles"),
+            collection(db, "restaurants", RestaurantId, "carousels"),
             where("active", "==", true),
 
         );

@@ -197,7 +197,11 @@ const Total = styled.div`
 `;
 
 const CheckoutButton = styled(NavLink)`
-  width: 100%;
+  display: flex;              
+  align-items: center;
+  justify-content: center;
+
+  width: 96%;
   padding: 14px;
   border-radius: 12px;
   background: black;
