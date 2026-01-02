@@ -1,5 +1,8 @@
 import * as functions from "firebase-functions";
+import { defineString } from "firebase-functions/params";
 import fetch from "node-fetch";
+
+const MP_ACCESS_TOKEN = defineString("MP_ACCESS_TOKEN");
 
 export const createPreference = functions.https.onRequest(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
@@ -24,7 +27,7 @@ export const createPreference = functions.https.onRequest(async (req, res) => {
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+          "Authorization": `Bearer ${MP_ACCESS_TOKEN.value()}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

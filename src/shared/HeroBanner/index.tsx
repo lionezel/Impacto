@@ -22,7 +22,6 @@ export const HeroBanner = ({
       <Content>
         <Subtitle>{subtitle}</Subtitle>
         <Title>{title}</Title>
-         <Title>{title}dadad</Title>
         {description && <Description>{description}</Description>}
       </Content>
     </Wrapper>

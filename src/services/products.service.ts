@@ -9,6 +9,14 @@ export const getProductsByIds = async (ids: string[]) => {
     );
 
     return docs
-        .filter(d => d.exists())
-        .map(d => ({ id: d.id, ...(d.data() as Product) }));
+        .filter((d) => d.exists())
+        .map((d) => {
+            const data = d.data() as Omit<Product, "id">;
+
+            return {
+                ...data,
+                id: d.id,
+            };
+        });
+
 };

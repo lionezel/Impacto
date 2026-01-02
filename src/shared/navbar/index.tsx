@@ -14,6 +14,9 @@ import { category } from "../../interfaces/category";
 import { CartDrawer } from "../CartDrawer";
 import { useAuth } from "../../hook/useAuth";
 import { UserMenu } from "../UserMenu";
+import { SearchOverlay } from "../SearchOverlay";
+import { Product } from "../../interfaces/product";
+import { useProducts } from "../../hook/useProducts";
 
 
 interface Props {
@@ -22,9 +25,11 @@ interface Props {
 }
 
 export const Navbar = ({ category, cartCount = 0 }: Props) => {
+  const { products } = useProducts();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -36,6 +41,15 @@ export const Navbar = ({ category, cartCount = 0 }: Props) => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleProfileClick = () => {
+    if (user) {
+      navigate("/profile");
+    } else {
+      navigate("/login");
+    }
+  };
+
 
   return (
     <Nav $scrolled={scrolled}>
@@ -60,11 +74,17 @@ export const Navbar = ({ category, cartCount = 0 }: Props) => {
           <PersonOutlineIcon onClick={() => navigate("/login")}
             style={{ cursor: "pointer" }} />
         )}
-        <SearchIcon />
+        <SearchIcon onClick={() => setSearchOpen(true)} />
         <Badge badgeContent={cartCount} color="error">
           <ShoppingBagOutlinedIcon onClick={() => setCartOpen(true)} />
         </Badge>
       </Icons>
+
+      <SearchOverlay
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        products={products}
+      />
 
       {/* Mobile toggle */}
       <Toggle onClick={() => setOpen(!open)}>
@@ -118,11 +138,22 @@ export const Navbar = ({ category, cartCount = 0 }: Props) => {
                 Carrito
               </button>
 
-              <button>
+              <button onClick={() => {
+                handleProfileClick();
+                setOpen(false);
+              }}>
+                <PersonOutlineIcon />
+                Perfil
+              </button>
+
+              <button onClick={() => setSearchOpen(true)}>
                 <SearchIcon />
                 Buscar
               </button>
+
             </MobileActions>
+
+
 
           </MobileMenu>
         )}
