@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "store-d17ce"
+  },
+  "targets": {
+    "mi-firebase-project": {
+      "hosting": {
+        "web": [
+          "store-d17ce"
+        ]
+      }
+    }
   }
 }
