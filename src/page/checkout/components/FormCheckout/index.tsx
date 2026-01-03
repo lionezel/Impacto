@@ -1,39 +1,49 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-export const FormCheckout = () => {
-     const [address, setAddress] = useState("");
-      const [name, setName] = useState("");
-      const [city, setCity] = useState("");
-      const [phone, setPhone] = useState("");
-      
-    return (
-        <Block>
-            <Title>Entrega</Title>
-            <Grid>
-                <Input
-                    placeholder="Nombre completo"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-                <Input
-                    placeholder="Dirección"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                />
-                <Input
-                    placeholder="Ciudad"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                />
-                <Input
-                    placeholder="Teléfono"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                />
-            </Grid>
-        </Block>
-    )
+interface Props {
+  form: {
+    name: string;
+    address: string;
+    city: string;
+    phone: string;
+  };
+  setForm: React.Dispatch<React.SetStateAction<any>>;
+}
+
+export const FormCheckout = ({ form, setForm }: Props) => {
+  const handleChange = (key: string, value: string) => {
+    setForm((prev: any) => ({ ...prev, [key]: value }));
+  };
+
+
+  return (
+    <Block>
+      <Title>Entrega</Title>
+      <Grid>
+        <Input
+          placeholder="Nombre completo"
+          value={form.name}
+          onChange={(e) => handleChange("name", e.target.value)}
+        />
+        <Input
+          placeholder="Dirección"
+          value={form.address}
+          onChange={(e) => handleChange("address", e.target.value)}
+        />
+        <Input
+          placeholder="Ciudad"
+          value={form.city}
+          onChange={(e) => handleChange("city", e.target.value)}
+        />
+        <Input
+          placeholder="Teléfono"
+          value={form.phone}
+          onChange={(e) => handleChange("phone", e.target.value)}
+        />
+      </Grid>
+    </Block>
+  )
 }
 
 const Block = styled.div`

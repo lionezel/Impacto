@@ -3,11 +3,19 @@ import { getAuth } from "firebase/auth";
 import { NavbarLight } from "../../shared/NabvarLight";
 import { FormCheckout, Payment, SummaryCheckout } from "./components";
 import styled from "styled-components";
+import { useState } from "react";
 
 export const Checkout = () => {
   const { cart } = useCart();
   const auth = getAuth();
   const user = auth.currentUser;
+
+  const [form, setForm] = useState({
+    name: "",
+    address: "",
+    city: "",
+    phone: "",
+  });
 
   return (
     <>
@@ -24,11 +32,11 @@ export const Checkout = () => {
               />
             </Block>
 
-            <FormCheckout />
+            <FormCheckout form={form} setForm={setForm} />
             <Payment />
 
           </Main>
-          <SummaryCheckout cart={cart} />
+          <SummaryCheckout cart={cart} form={form} />
         </Content>
       </Page>
     </>

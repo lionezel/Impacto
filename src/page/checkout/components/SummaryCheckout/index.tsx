@@ -1,14 +1,21 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CartItem } from "../../../../interfaces/CartItem";
 import styled from "styled-components";
 import { useGlobalAlert } from "../../../../context/AlertContext";
 
 interface Props {
   cart: CartItem[]
+  form: {
+    name: string;
+    address: string;
+    city: string;
+    phone: string;
+  };
 }
 
-export const SummaryCheckout = ({ cart }: Props) => {
+export const SummaryCheckout = ({ cart, form }: Props) => {
   const { showAlert } = useGlobalAlert();
+  const [loading, setLoading] = useState(false);
   const subtotal = useMemo(
     () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [cart]
@@ -17,7 +24,15 @@ export const SummaryCheckout = ({ cart }: Props) => {
   const shipping = 0;
   const total = subtotal + shipping;
 
+  const isFormValid = Object.values(form).every(
+    (value) => value.trim() !== ""
+  );
+
   const handlePay = async () => {
+    if (!isFormValid) {
+      showAlert("Completa todos los datos de entrega", "error");
+      return;
+    }
     try {
       const res = await fetch(
         "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
@@ -27,7 +42,7 @@ export const SummaryCheckout = ({ cart }: Props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            total: 50000,
+            total: total,
           }),
         }
       );
@@ -86,8 +101,8 @@ export const SummaryCheckout = ({ cart }: Props) => {
         <strong>${total.toLocaleString("es-CO")}</strong>
       </TotalRow>
 
-      <PayButton onClick={handlePay}>
-        Pagar ${total.toLocaleString("es-CO")}
+      <PayButton onClick={handlePay} disabled={loading}>
+        {loading ? "Procesando pago..." : `Pagar $${total.toLocaleString("es-CO")}`}
       </PayButton>
     </Sidebar>
   )
