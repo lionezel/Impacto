@@ -11,17 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { db } from "../firebase/config";
 import { useAuth } from "./useAuth";
 import { RestaurantId } from "../global/restaurantId";
-
-export interface CartItem {
-  cartItemId: string;
-  productId: string;
-  variantId: string;
-  name: string;
-  variantLabel: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
+import { CartItem } from "../interfaces/CartItem";
 
 export const useCart = () => {
   const { user } = useAuth();

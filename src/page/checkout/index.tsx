@@ -1,75 +1,19 @@
-import { useMemo, useState } from "react";
-import styled from "styled-components";
 import { useCart } from "../../hook/useCart";
-
-// 🔥 Firebase
 import { getAuth } from "firebase/auth";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../../firebase/config";
-import { RestaurantId } from "../../global/restaurantId";
-import { useNavigate } from "react-router-dom";
 import { NavbarLight } from "../../shared/NabvarLight";
+import { FormCheckout, Payment, SummaryCheckout } from "./components";
+import styled from "styled-components";
 
 export const Checkout = () => {
-  const { cart, clearCart } = useCart();
-  const navigate = useNavigate();
-
+  const { cart } = useCart();
   const auth = getAuth();
   const user = auth.currentUser;
-
-  const [paymentMethod, setPaymentMethod] = useState<"cash" | "card">("cash");
-  const [address, setAddress] = useState("");
-  const [name, setName] = useState("");
-  const [city, setCity] = useState("");
-  const [phone, setPhone] = useState("");
-
-  const subtotal = useMemo(
-    () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
-    [cart]
-  );
-
-  const discount = subtotal * 0.05;
-  const shipping = 0;
-  const taxes = (subtotal - discount) * 0.19;
-  const total = subtotal - discount + shipping + taxes;
-
-  const handlePay = async () => {
-    try {
-      const res = await fetch(
-        "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            total: 50000, // 🔥 MONTO REAL
-          }),
-        }
-      );
-
-      const data = await res.json();
-      console.log("MP RESPONSE 👉", data);
-
-      // 🔴 VALIDACIÓN CLAVE (evita /undefined)
-      if (!data.init_point) {
-        alert("Error al crear el pago");
-        return;
-      }
-
-      window.location.href = data.init_point;
-    } catch (error) {
-      console.error(error);
-      alert("Error al conectar con Mercado Pago");
-    }
-  };
 
   return (
     <>
       <NavbarLight />
       <Page>
         <Content>
-          {/* IZQUIERDA */}
           <Main>
             <Block>
               <Title>Contacto</Title>
@@ -80,121 +24,16 @@ export const Checkout = () => {
               />
             </Block>
 
-            <Block>
-              <Title>Entrega</Title>
-              <Grid>
-                <Input
-                  placeholder="Nombre completo"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <Input
-                  placeholder="Dirección"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-                <Input
-                  placeholder="Ciudad"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-                <Input
-                  placeholder="Teléfono"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </Grid>
-            </Block>
+            <FormCheckout />
+            <Payment />
 
-            <Block>
-              <Title>Pago</Title>
-
-              <PaymentOption>
-                <input
-                  type="radio"
-                  checked={paymentMethod === "cash"}
-                  onChange={() => setPaymentMethod("cash")}
-                />
-                <span>Efectivo contra entrega</span>
-              </PaymentOption>
-
-              <PaymentOption>
-                <input
-                  type="radio"
-                  checked={paymentMethod === "card"}
-                  onChange={() => setPaymentMethod("card")}
-                />
-                <span>Pagar con tarjeta (Mercado Pago)</span>
-              </PaymentOption>
-            </Block>
           </Main>
-
-          {/* DERECHA */}
-          <Sidebar>
-            <OrderTitle>Resumen del pedido</OrderTitle>
-
-            {cart.map((item) => (
-              <Item key={item.productId}>
-                <ItemInfo>
-                  <Image src={item.image} />
-                  <div>
-                    <ItemName>{item.name}</ItemName>
-                    <ItemQty>x {item.quantity}</ItemQty>
-                  </div>
-                </ItemInfo>
-
-                <ItemPrice>
-                  ${(item.price * item.quantity).toLocaleString("es-CO")}
-                </ItemPrice>
-              </Item>
-            ))}
-
-            <Divider />
-
-            <Row>
-              <span>Subtotal</span>
-              <span>${subtotal.toLocaleString("es-CO")}</span>
-            </Row>
-
-            <Row>
-              <span>Descuento</span>
-              <span>- ${discount.toLocaleString("es-CO")}</span>
-            </Row>
-
-            <Row>
-              <span>Envío</span>
-              <span>Gratis</span>
-            </Row>
-
-            <Row>
-              <span>Impuestos</span>
-              <span>${taxes.toLocaleString("es-CO")}</span>
-            </Row>
-
-            <Divider />
-
-            <TotalRow>
-              <span>Total</span>
-              <strong>${total.toLocaleString("es-CO")}</strong>
-            </TotalRow>
-
-            <TaxNote>
-              Incluye ${taxes.toLocaleString("es-CO")} de impuestos
-            </TaxNote>
-
-            <PayButton onClick={handlePay}>
-              Pagar ${total.toLocaleString("es-CO")}
-            </PayButton>
-          </Sidebar>
+          <SummaryCheckout cart={cart} />
         </Content>
       </Page>
     </>
   );
 };
-
-/* ======================
-   ESTILOS
-====================== */
 
 const Page = styled.div`
   background: #fafafa;
@@ -220,17 +59,6 @@ const Content = styled.div`
 
 const Main = styled.div``;
 
-const Sidebar = styled.div`
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-
-  @media (max-width: 1024px) {
-    padding: 20px;
-  }
-`;
-
 const Block = styled.div`
   margin-bottom: 36px;
 `;
@@ -247,105 +75,4 @@ const Input = styled.input`
   border: 1px solid #ddd;
   margin-bottom: 12px;
   font-size: 14px;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const PaymentOption = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  cursor: pointer;
-`;
-
-const PayButton = styled.button`
-  width: 100%;
-  padding: 18px;
-  background: #000;
-  color: #fff;
-  border-radius: 14px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-
-  @media (max-width: 640px) {
-    position: sticky;
-    bottom: 12px;
-    z-index: 20;
-  }
-`;
-
-const OrderTitle = styled.h3`
-  font-size: 18px;
-  margin-bottom: 16px;
-`;
-
-const Item = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
-`;
-
-const ItemInfo = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
-const Image = styled.img`
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 12px;
-`;
-
-const ItemName = styled.p`
-  font-size: 14px;
-  margin: 0;
-`;
-
-const ItemQty = styled.span`
-  font-size: 12px;
-  color: #777;
-`;
-
-const ItemPrice = styled.div`
-  font-weight: 500;
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin: 10px 0;
-`;
-
-const TotalRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 20px;
-  margin-top: 20px;
-`;
-
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #eee;
-  margin: 16px 0;
-`;
-
-const TaxNote = styled.p`
-  font-size: 12px;
-  color: #777;
-  margin-top: 8px;
 `;

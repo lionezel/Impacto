@@ -6,11 +6,13 @@ import { useAuth } from "../../hook/useAuth";
 import { addToCart } from "../../services/cart.service";
 import { NavbarLight } from "../../shared/NabvarLight";
 import styled from "styled-components";
+import { useGlobalAlert } from "../../context/AlertContext";
 
 export const ProductDetail = () => {
   const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { showAlert } = useGlobalAlert();
 
   const { product, loading, error } = useProductDetail(id || "");
   const [variantSelected, setVariantSelected] = useState<Variant | null>(null);
@@ -36,6 +38,7 @@ export const ProductDetail = () => {
     }
 
     await addToCart(user.uid, product, variantSelected);
+    showAlert("Producto agregado al carrito", "success");
   };
 
   return (
@@ -74,7 +77,6 @@ export const ProductDetail = () => {
           <Divider />
 
           <ButtonPrimary onClick={handleAddToCart}>AGREGAR AL CARRITO</ButtonPrimary>
-          <ButtonSecondary>COMPRAR AHORA</ButtonSecondary>
 
           <Divider />
 

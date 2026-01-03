@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CartItem as CartItemType } from "../../hook/useCart";
+import { CartItem as CartItemType } from "../../interfaces/CartItem";
 
 interface Props {
   item: CartItemType;

@@ -7,10 +7,6 @@ interface GlobalAlertProps {
     severity?: AlertSeverity;
     duration?: number;
     onClose: () => void;
-    position?: {
-        vertical: "top" | "bottom";
-        horizontal: "left" | "center" | "right";
-    };
 }
 
 export const GlobalAlert = ({
@@ -19,14 +15,20 @@ export const GlobalAlert = ({
     severity = "info",
     duration = 3000,
     onClose,
-    position = { vertical: "top", horizontal: "center" },
 }: GlobalAlertProps) => {
     return (
         <Snackbar
             open={open}
             autoHideDuration={duration}
             onClose={onClose}
-            anchorOrigin={position}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            sx={{
+                position: "fixed",
+                top: 16,
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: (theme) => theme.zIndex.modal + 1, 
+            }}
         >
             <Alert
                 onClose={onClose}

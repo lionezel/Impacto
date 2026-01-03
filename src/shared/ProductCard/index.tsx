@@ -6,6 +6,7 @@ import { useAuth } from "../../hook/useAuth";
 import { addToCart } from "../../services/cart.service";
 import { useAlert } from "../../hook/useAlert";
 import { GlobalAlert } from "../../global/GlobalAlert";
+import { useGlobalAlert } from "../../context/AlertContext";
 
 
 interface Props {
@@ -14,8 +15,8 @@ interface Props {
 }
 
 export const ProductCard = ({ product, variant }: Props) => {
+  const { showAlert } = useGlobalAlert();
   const selectedVariant = variant ?? product.variants[0];
-  const { alert, showAlert, closeAlert } = useAlert();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -55,14 +56,6 @@ export const ProductCard = ({ product, variant }: Props) => {
           </AddButton>
         </Info>
       </Card>
-
-      {/* ALERTA GLOBAL */}
-      <GlobalAlert
-        open={alert.open}
-        message={alert.message}
-        severity={alert.severity}
-        onClose={closeAlert}
-      />
     </>
   );
 };
