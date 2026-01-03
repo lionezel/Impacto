@@ -18,7 +18,6 @@
     }
   ],
   "hosting": {
-    "target": "store-d17ce",
     "public": "build",
     "ignore": [
       "firebase.json",
