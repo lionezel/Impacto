@@ -8,6 +8,8 @@ const db = admin.firestore();
 export const mercadoPagoWebhook = functions.https.onRequest(
   async (req, res): Promise<void> => {
     try {
+      console.log("🔥 WEBHOOK RECIBIDO", req.body);
+
       const paymentId = req.body?.data?.id;
 
       if (!paymentId) {
@@ -15,7 +17,6 @@ export const mercadoPagoWebhook = functions.https.onRequest(
         return;
       }
 
-      // 🔍 Consultar el pago real
       const mpRes = await fetch(
         `https://api.mercadopago.com/v1/payments/${paymentId}`,
         {
@@ -27,21 +28,22 @@ export const mercadoPagoWebhook = functions.https.onRequest(
 
       const payment = await mpRes.json();
 
+      console.log("💳 PAYMENT STATUS", payment.status);
+
       if (payment.status !== "approved") {
-        res.status(200).send("Payment not approved");
+        res.status(200).send("Not approved");
         return;
       }
 
       const userId = payment.metadata?.userId;
-
       if (!userId) {
-        res.status(400).send("No userId in metadata");
+        res.status(400).send("No userId");
         return;
       }
 
       const restaurantId = "D92YFJ9B1NOCfSjz2fRU";
 
-      // 🧾 1️⃣ CREAR ORDEN
+      // 🧾 Crear orden
       await db
         .collection("restaurants")
         .doc(restaurantId)
@@ -53,19 +55,18 @@ export const mercadoPagoWebhook = functions.https.onRequest(
           date: admin.firestore.FieldValue.serverTimestamp(),
         });
 
-      // 🧹 2️⃣ BORRAR CARRITO DEL USUARIO
-      const cartRef = db
+      // 🧹 Borrar carrito
+      await db
         .collection("restaurants")
         .doc(restaurantId)
         .collection("carts")
-        .doc(userId);
+        .doc(userId)
+        .delete();
 
-      await cartRef.delete();
-
-      res.status(200).send("Order created & cart cleared");
+      res.status(200).send("OK");
     } catch (error) {
-      console.error("Webhook error", error);
-      res.status(500).send("Webhook error");
+      console.error("❌ Webhook error", error);
+      res.status(500).send("Error");
     }
   }
 );

@@ -3,6 +3,8 @@ import { defineString } from "firebase-functions/params";
 import fetch from "node-fetch";
 
 const MP_ACCESS_TOKEN = defineString("MP_ACCESS_TOKEN");
+export { mercadoPagoWebhook } from "./mercadoPagoWebhook";
+
 
 export const createPreference = functions.https.onRequest(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
