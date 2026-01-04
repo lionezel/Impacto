@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { CartItem } from "../../../../interfaces/CartItem";
 import styled from "styled-components";
 import { useGlobalAlert } from "../../../../context/AlertContext";
+import { getAuth } from "firebase/auth";
 
 interface Props {
   cart: CartItem[]
@@ -20,47 +21,54 @@ export const SummaryCheckout = ({ cart, form }: Props) => {
     () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [cart]
   );
-
-  const shipping = 0;
-  const total = subtotal + shipping;
+  const auth = getAuth();
+  const shipping = 1000;
+  const total = Math.round(subtotal + shipping);
 
   const isFormValid = Object.values(form).every(
     (value) => value.trim() !== ""
   );
 
   const handlePay = async () => {
-    if (!isFormValid) {
-      showAlert("Completa todos los datos de entrega", "error");
+  if (!isFormValid) {
+    showAlert("Completa todos los datos de entrega", "error");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const res = await fetch(
+      "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          total,
+          cart,
+          form,
+          orderType: "llevar",
+          paymentMethod: "mercadopago",
+          userId: auth.currentUser?.uid,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!data.init_point) {
+      showAlert("Error al crear el pago", "error");
+      setLoading(false);
       return;
     }
-    try {
-      const res = await fetch(
-        "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            total: total,
-          }),
-        }
-      );
 
-      const data = await res.json();
-      console.log("MP RESPONSE 👉", data);
-
-      if (!data.init_point) {
-        showAlert("Error al crear el pago", "error");
-        return;
-      }
-
-      window.location.href = data.init_point;
-    } catch (error) {
-      console.error(error);
-      showAlert("Error al conectar con Mercado Pago", "error");
-    }
-  };
+    window.location.href = data.init_point;
+  } catch (error) {
+    console.error(error);
+    showAlert("Error al conectar con Mercado Pago", "error");
+    setLoading(false);
+  }
+};
 
   return (
     <Sidebar>

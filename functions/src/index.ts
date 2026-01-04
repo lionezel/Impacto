@@ -20,7 +20,14 @@ export const createPreference = functions.https.onRequest(async (req, res) => {
   }
 
   try {
-    const { total } = req.body;
+    const {
+      total,
+      cart,
+      form,
+      orderType,
+      paymentMethod,
+      userId,
+    } = req.body;
 
     const mpRes = await fetch(
       "https://api.mercadopago.com/checkout/preferences",
@@ -39,12 +46,25 @@ export const createPreference = functions.https.onRequest(async (req, res) => {
               currency_id: "COP",
             },
           ],
-          external_reference: "checkout",
+
+          // 🔥 METADATA (ESTO ES LA CLAVE)
+          metadata: {
+            cart,
+            form,
+            orderType,
+            paymentMethod,
+            userId,
+          },
+
           back_urls: {
             success: "https://store-d17ce.web.app/success",
             failure: "https://store-d17ce.web.app/failure",
             pending: "https://store-d17ce.web.app/pending",
           },
+
+          notification_url:
+            "https://us-central1-store-d17ce.cloudfunctions.net/mercadoPagoWebhook",
+
           auto_return: "approved",
         }),
       }
