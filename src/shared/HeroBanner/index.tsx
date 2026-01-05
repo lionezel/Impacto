@@ -15,7 +15,7 @@ export const HeroBanner = ({
 }: Props) => {
   return (
     <Wrapper>
-      <Background image={backgroundImage} />
+      <Background $image={backgroundImage} />
       <Overlay />
 
       <Content>
@@ -62,10 +62,10 @@ const Wrapper = styled.section`
   padding-top: ${NAVBAR_HEIGHT}px;
 `;
 
-const Background = styled.div<{ image: string }>`
+const Background = styled.div<{ $image: string }>`
   position: absolute;
   inset: 0;
-  background-image: url(${({ image }) => image});
+  background-image: url(${({ $image }) => $image});
   background-size: cover;
   background-position: center;
   animation: ${fadeZoom} 1.4s ease-out forwards;

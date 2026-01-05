@@ -9,7 +9,7 @@ export const Payment = () => {
             <Title>Pago</Title>
 
             <PaymentCard
-                active={paymentMethod === "card"}
+                $active={paymentMethod === "card"}
                 onClick={() => setPaymentMethod("card")}
             >
                 <Left>
@@ -34,7 +34,7 @@ export const Payment = () => {
             </PaymentCard>
 
             <PaymentCard
-                active={paymentMethod === "cash"}
+                $active={paymentMethod === "cash"}
                 onClick={() => setPaymentMethod("cash")}
             >
                 <Left>
@@ -59,20 +59,20 @@ const Title = styled.h2`
   margin-bottom: 16px;
 `;
 
-const PaymentCard = styled.div<{ active: boolean }>`
+const PaymentCard = styled.div<{ $active: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 18px;
   border-radius: 14px;
-  border: 2px solid ${({ active }) => (active ? "#000" : "#ddd")};
+  border: 2px solid ${({ $active }) => ($active ? "#000" : "#ddd")};
   background: #fff;
   cursor: pointer;
   margin-bottom: 14px;
   transition: all 0.2s ease;
 
-  box-shadow: ${({ active }) =>
-    active ? "0 6px 18px rgba(0,0,0,0.08)" : "none"};
+  box-shadow: ${({ $active }) =>
+    $active ? "0 6px 18px rgba(0,0,0,0.08)" : "none"};
 
   &:hover {
     border-color: #000;

@@ -99,8 +99,8 @@ export const ProfilePage = () => {
 
               {/* ITEMS */}
               <Stack spacing={2}>
-                {order.products.map((p: any) => (
-                  <Stack key={p.id} direction="row" spacing={2} alignItems="center">
+                {order.products.map((p: any, index: number) => (
+                  <Stack key={`${order.id}-${p.productId ?? index}`} direction="row" spacing={2} alignItems="center">
                     <Avatar src={p.image} alt={p.name} sx={avatarSx} />
                     <Box flex={1}>
                       <Typography fontWeight={600}>{p.name}</Typography>

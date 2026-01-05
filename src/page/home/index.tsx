@@ -7,7 +7,7 @@ import { HomeCarousels } from "./components/carousel";
 import styled from "styled-components";
 
 interface Props {
-  visible: boolean;
+  $visible: boolean;
 }
 
 export const HomePage = () => {
@@ -32,24 +32,24 @@ export const HomePage = () => {
 
       <Divider />
       <div ref={titleAnim.ref}>
-        <SectionTitle visible={titleAnim.visible}>
+        <SectionTitle $visible={titleAnim.visible}>
           Todos los productos
         </SectionTitle>
       </div>
 
 
       {/* GRID ANIMADO */}
-      <AnimatedSection ref={gridAnim.ref} visible={gridAnim.visible}>
+      <AnimatedSection ref={gridAnim.ref} $visible={gridAnim.visible}>
         <ProductGrid products={products} />
       </AnimatedSection>
     </div>
   );
 };
 
-const AnimatedSection = styled.div<{ visible: boolean }>`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: ${({ visible }) =>
-    visible ? "translateY(0)" : "translateY(40px)"};
+const AnimatedSection = styled.div<{ $visible: boolean }>`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transform: ${({ $visible }) =>
+    $visible ? "translateY(0)" : "translateY(40px)"};
 
   transition: all 0.7s ease-out;
 `;
@@ -63,9 +63,9 @@ const SectionTitle = styled.h2<Props>`
   padding-left: 6px;
   color: #111;
 
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: ${({ visible }) =>
-    visible ? "translateY(0)" : "translateY(30px)"};
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transform: ${({ $visible }) =>
+    $visible ? "translateY(0)" : "translateY(30px)"};
 
   transition: all 0.6s ease-out;
 
