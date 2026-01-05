@@ -1,10 +1,10 @@
 import * as functions from "firebase-functions";
-import { defineString } from "firebase-functions/params";
 import fetch from "node-fetch";
+import { defineString } from "firebase-functions/params";
 
-const MP_ACCESS_TOKEN = defineString("MP_ACCESS_TOKEN");
 export { mercadoPagoWebhook } from "./mercadoPagoWebhook";
 
+const MP_ACCESS_TOKEN = defineString("MP_ACCESS_TOKEN");
 
 export const createPreference = functions.https.onRequest(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
@@ -49,14 +49,15 @@ export const createPreference = functions.https.onRequest(async (req, res) => {
             },
           ],
 
-          // 🔥 METADATA (ESTO ES LA CLAVE)
           metadata: {
             cart,
             form,
-            orderType,
-            paymentMethod,
-            userId,
+            user_id: userId,
+            order_type: orderType,
+            payment_method: paymentMethod,
           },
+
+          external_reference: userId,
 
           back_urls: {
             success: "https://store-d17ce.web.app/success",
@@ -79,7 +80,7 @@ export const createPreference = functions.https.onRequest(async (req, res) => {
       id: data.id,
     });
   } catch (error) {
-    console.error(error);
+    console.error("❌ Error creando preferencia", error);
     res.status(500).json({ error: "Error creando preferencia" });
   }
 });

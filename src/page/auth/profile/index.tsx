@@ -88,9 +88,7 @@ export const ProfilePage = () => {
               </Box>
 
               {/* FECHA */}
-              <Typography variant="body2" color="text.secondary" mb={2}>
-                {format(date, "dd MMM yyyy, HH:mm", { locale: es })}
-              </Typography>
+
 
               {/* DIRECCIÓN */}
               {order.address && (
