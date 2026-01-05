@@ -20,10 +20,7 @@ export const Success = () => {
   useEffect(() => {
     const signIn = async () => {
       try {
-        showAlert("Verificando tu correo...", "info");
-
         if (!isSignInWithEmailLink(auth, window.location.href)) {
-          showAlert("El enlace no es válido.", "error");
           return;
         }
 
