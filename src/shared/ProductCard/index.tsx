@@ -1,13 +1,9 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
 import { Product, Variant } from "../../interfaces/product";
 import { useAuth } from "../../hook/useAuth";
 import { addToCart } from "../../services/cart.service";
-import { useAlert } from "../../hook/useAlert";
-import { GlobalAlert } from "../../global/GlobalAlert";
 import { useGlobalAlert } from "../../context/AlertContext";
-
 
 interface Props {
   product: Product;

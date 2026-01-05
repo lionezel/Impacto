@@ -1,5 +1,5 @@
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-import { auth } from "../../firebase/config";
+import { auth } from "../../../../firebase/config";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -10,8 +10,8 @@ import {
   Stack,
 } from "@mui/material";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import { useAlert } from "../../hook/useAlert";
-import { GlobalAlert } from "../../global/GlobalAlert";
+import { useAlert } from "../../../../hook/useAlert";
+import { GlobalAlert } from "../../../../global/GlobalAlert";
 
 export const Success = () => {
   const navigate = useNavigate();

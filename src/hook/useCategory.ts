@@ -1,4 +1,3 @@
-
 import { db } from "../firebase/config";
 import { RestaurantId } from "../global/restaurantId";
 import { category } from "../interfaces/category";

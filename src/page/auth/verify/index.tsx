@@ -1,10 +1,10 @@
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-import { auth } from "../../firebase/config";
+import { auth } from "../../../firebase/config";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Container, Typography } from "@mui/material";
-import { useAlert } from "../../hook/useAlert";
-import { GlobalAlert } from "../../global/GlobalAlert";
+import { useAlert } from "../../../hook/useAlert";
+import { GlobalAlert } from "../../../global/GlobalAlert";
 
 
 export const VerifyPage = () => {

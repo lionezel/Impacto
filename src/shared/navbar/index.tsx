@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,7 +15,6 @@ import { CartDrawer } from "../CartDrawer";
 import { useAuth } from "../../hook/useAuth";
 import { UserMenu } from "../UserMenu";
 import { SearchOverlay } from "../SearchOverlay";
-import { Product } from "../../interfaces/product";
 import { useProducts } from "../../hook/useProducts";
 
 
@@ -58,7 +57,6 @@ export const Navbar = ({ category, cartCount = 0 }: Props) => {
       {/* Desktop Menu */}
       <Menu>
         {category.map((item) => (
-          console.log(item),
           <li key={item.id} className={item.isSale ? "sale" : ""}>
             <NavLink to={`/catalog/${item.name}`}>{item.name}</NavLink>
           </li>

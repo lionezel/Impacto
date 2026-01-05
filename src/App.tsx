@@ -1,10 +1,15 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CatalogPage, Checkout, Failure, HomePage, LoginPage, Pending, ProfilePage, Success, VerifyPage } from './page';
+import { CatalogPage, Checkout, HomePage } from './page';
 import './App.css';
 import { AuthProvider } from './auth/AuthProvider';
 import { initMercadoPago } from '@mercadopago/sdk-react';
 import { ProductDetail } from './page/productDetail';
 import { AlertProvider } from './context/AlertContext';
+import { LoginPage } from './page/auth/login';
+import { ProfilePage } from './page/auth/profile';
+import { Success } from './page/checkout/page/success';
+import { VerifyPage } from './page/auth';
+import { Failure, Pending } from './page/checkout/page';
 
 
 function App() {

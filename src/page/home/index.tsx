@@ -3,7 +3,7 @@ import { useCategory } from "../../hook/useCategory";
 import { useProducts } from "../../hook/useProducts";
 import { HeroBanner, Navbar, ProductGrid } from "../../shared";
 import { useScrollAnimation } from "../../shared/useScrollAnimation";
-import { HomeCarousels } from "./shared/carousel";
+import { HomeCarousels } from "./components/carousel";
 import styled from "styled-components";
 
 interface Props {

@@ -7,10 +7,10 @@ import {
   Avatar,
   Stack,
 } from "@mui/material";
-import { useUserOrders } from "../../hook/useUserOrders";
+import { useUserOrders } from "../../../hook/useUserOrders";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { NavbarLight } from "../../shared/NabvarLight";
+import { NavbarLight } from "../../../shared/NabvarLight";
 
 export const ProfilePage = () => {
   const { orders, loading } = useUserOrders();
