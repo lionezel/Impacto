@@ -1,11 +1,14 @@
-import { useMemo, useState } from "react";
-import { CartItem } from "../../../../interfaces/CartItem";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { CartItem } from "../../../../interfaces/CartItem";
 import { useGlobalAlert } from "../../../../context/AlertContext";
 import { getAuth } from "firebase/auth";
+import { getFinalPrice } from "../../../../utils/getFinalPrice";
+import { useDiscounts } from "../../../../hook/useDiscounts";
+import { getDiscountInfo } from "../../../../utils/price.utils";
 
 interface Props {
-  cart: CartItem[]
+  cart: CartItem[];
   form: {
     name: string;
     address: string;
@@ -17,78 +20,140 @@ interface Props {
 export const SummaryCheckout = ({ cart, form }: Props) => {
   const { showAlert } = useGlobalAlert();
   const [loading, setLoading] = useState(false);
-  const subtotal = useMemo(
-    () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
-    [cart]
-  );
   const auth = getAuth();
-  const shipping = 1000;
-  const total = Math.round(subtotal + shipping);
+  const { getActiveDiscounts } = useDiscounts();
+  const [discounts, setDiscounts] = useState<any[]>([]);
+
+  useEffect(() => {
+    getActiveDiscounts().then(setDiscounts);
+  }, []);
+
+  const cartWithDiscounts = useMemo(() => {
+    return cart.map((item) => {
+      const discountInfo = getDiscountInfo(
+        item.price,
+        item.productId,
+        discounts
+      );
+
+      const finalPrice = discountInfo?.finalPrice ?? item.price;
+
+      return {
+        ...item,
+        finalPrice,
+        discountPercent: discountInfo?.percent ?? 0,
+        total: finalPrice * item.quantity,
+      };
+    });
+  }, [cart, discounts]);
+
+  const shipping = 5000;
+
+  const subtotal = useMemo(() => {
+    return cartWithDiscounts.reduce(
+      (sum, item) => sum + item.total,
+      0
+    );
+  }, [cartWithDiscounts]);
+
+  const total = useMemo(() => {
+    return cartWithDiscounts.reduce(
+      (sum, item) => sum + item.total,
+      0
+    );
+  }, [cartWithDiscounts]);
 
   const isFormValid = Object.values(form).every(
-    (value) => value.trim() !== ""
+    (v) => v.trim() !== ""
   );
 
+  const finaltotal = total + shipping
+
   const handlePay = async () => {
-  if (!isFormValid) {
-    showAlert("Completa todos los datos de entrega", "error");
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    const res = await fetch(
-      "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          total,
-          cart,
-          form,
-          orderType: "llevar",
-          paymentMethod: "mercadopago",
-          userId: auth.currentUser?.uid,
-        }),
-      }
-    );
-
-    const data = await res.json();
-
-    if (!data.init_point) {
-      showAlert("Error al crear el pago", "error");
-      setLoading(false);
+    if (!isFormValid) {
+      showAlert("Completa todos los datos de entrega", "error");
       return;
     }
 
-    window.location.href = data.init_point;
-  } catch (error) {
-    console.error(error);
-    showAlert("Error al conectar con Mercado Pago", "error");
-    setLoading(false);
-  }
-};
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        "https://us-central1-store-d17ce.cloudfunctions.net/createPreference",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            total,
+            cart,
+            form,
+            userId: auth.currentUser?.uid,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!data.init_point) {
+        showAlert("Error al crear el pago", "error");
+        return;
+      }
+
+      window.location.href = data.init_point;
+    } catch (error) {
+      console.error(error);
+      showAlert("Error al conectar con Mercado Pago", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Sidebar>
       <OrderTitle>Resumen del pedido</OrderTitle>
 
-      {cart.map((item) => (
-        <Item key={item.productId}>
-          <ItemInfo>
-            <Image src={item.image} />
-            <div>
-              <ItemName>{item.name}</ItemName>
-              <ItemQty>x {item.quantity}</ItemQty>
-            </div>
-          </ItemInfo>
+      {cartWithDiscounts.map((item) => {
+        const finalPrice = getFinalPrice(
+          item.price,
+          item.discountPercent
+        );
 
-          <ItemPrice>
-            ${(item.price * item.quantity).toLocaleString("es-CO")}
-          </ItemPrice>
-        </Item>
-      ))}
+        const hasDiscount =
+          item.discountPercent && item.discountPercent > 0;
+
+        return (
+          <Item key={item.cartItemId}>
+            <ItemInfo>
+              <Image src={item.image} />
+
+              <div>
+                <ItemName>{item.name}</ItemName>
+
+                {hasDiscount ? (
+                  <Prices>
+                    <OldPrice>
+                      ${item.price.toLocaleString("es-CO")}
+                    </OldPrice>
+                    <NewPrice>
+                      ${finalPrice.toLocaleString("es-CO")}
+                    </NewPrice>
+                  </Prices>
+                ) : (
+                  <NormalPrice>
+                    ${item.price.toLocaleString("es-CO")}
+                  </NormalPrice>
+                )}
+
+                <ItemQty>x {item.quantity}</ItemQty>
+              </div>
+            </ItemInfo>
+
+            <ItemTotal>
+              ${(finalPrice * item.quantity).toLocaleString("es-CO")}
+            </ItemTotal>
+          </Item>
+        );
+      })}
 
       <Divider />
 
@@ -99,32 +164,30 @@ export const SummaryCheckout = ({ cart, form }: Props) => {
 
       <Row>
         <span>Envío</span>
-        <span>Gratis</span>
+        <span>{shipping}</span>
       </Row>
 
       <Divider />
 
       <TotalRow>
         <span>Total</span>
-        <strong>${total.toLocaleString("es-CO")}</strong>
+        <strong>${finaltotal.toLocaleString("es-CO")}</strong>
       </TotalRow>
 
       <PayButton onClick={handlePay} disabled={loading}>
-        {loading ? "Procesando pago..." : `Pagar $${total.toLocaleString("es-CO")}`}
+        {loading
+          ? "Procesando pago..."
+          : `Pagar $${finaltotal.toLocaleString("es-CO")}`}
       </PayButton>
     </Sidebar>
-  )
-}
+  );
+};
 
 const Sidebar = styled.div`
   background: white;
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-
-  @media (max-width: 1024px) {
-    padding: 20px;
-  }
 `;
 
 const OrderTitle = styled.h3`
@@ -146,8 +209,8 @@ const ItemInfo = styled.div`
 const Image = styled.img`
   width: 64px;
   height: 64px;
-  object-fit: cover;
   border-radius: 12px;
+  object-fit: cover;
 `;
 
 const ItemName = styled.p`
@@ -155,19 +218,41 @@ const ItemName = styled.p`
   margin: 0;
 `;
 
-const ItemQty = styled.span`
+const Prices = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+const OldPrice = styled.span`
+  font-size: 12px;
+  color: #999;
+  text-decoration: line-through;
+`;
+
+const NewPrice = styled.span`
+  font-size: 13px;
+  font-weight: 700;
+  color: #e60023;
+`;
+
+const NormalPrice = styled.span`
+  font-size: 13px;
+  font-weight: 600;
+`;
+
+const ItemQty = styled.div`
   font-size: 12px;
   color: #777;
 `;
 
-const ItemPrice = styled.div`
-  font-weight: 500;
+const ItemTotal = styled.div`
+  font-weight: 600;
 `;
 
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
   margin: 10px 0;
 `;
 
@@ -194,9 +279,8 @@ const PayButton = styled.button`
   border: none;
   cursor: pointer;
 
-  @media (max-width: 640px) {
-    position: sticky;
-    bottom: 12px;
-    z-index: 20;
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;

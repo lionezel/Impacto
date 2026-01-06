@@ -4,7 +4,10 @@ export interface CartItem {
   variantId: string;
   name: string;
   variantLabel: string;
-  price: number;
+  price: number;        // precio base
   image: string;
   quantity: number;
+
+  // 👇 OPCIONAL (solo referencia)
+  discountPercent?: number;
 }

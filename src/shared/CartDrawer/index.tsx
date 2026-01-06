@@ -3,8 +3,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import styled from "styled-components";
 import { CartItem } from "../CartItem";
 import { useCart } from "../../hook/useCart";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useDiscounts } from "../../hook/useDiscounts";
+import { getDiscountInfo } from "../../utils/price.utils";
 
 interface Props {
   open: boolean;
@@ -14,44 +16,41 @@ interface Props {
 export const CartDrawer = ({ open, onClose }: Props) => {
   const { cart, removeFromCart, updateQuantity } = useCart();
   const [loading, setLoading] = useState(false);
+  const { getActiveDiscounts } = useDiscounts();
+  const [discounts, setDiscounts] = useState<any[]>([]);
 
-  const total = useMemo(() => {
-    return cart.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-  }, [cart]);
 
-  const handleCheckout = async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    getActiveDiscounts().then(setDiscounts);
+  }, []);
 
-      const response = await fetch(
-        "http://127.0.0.1:5001/store-d17ce/us-central1/createPreference",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            items: cart,
-          }),
-        }
+  const cartWithDiscounts = useMemo(() => {
+    return cart.map((item) => {
+      const discountInfo = getDiscountInfo(
+        item.price,
+        item.productId,
+        discounts
       );
 
-      const data = await response.json();
+      const finalPrice = discountInfo?.finalPrice ?? item.price;
 
-      if (!data.init_point) {
-        throw new Error("No se pudo crear la preferencia");
-      }
+      return {
+        ...item,
+        finalPrice,
+        discountPercent: discountInfo?.percent ?? 0,
+        total: finalPrice * item.quantity,
+      };
+    });
+  }, [cart, discounts]);
 
-      window.location.href = data.init_point;
-    } catch (error) {
-      console.error(error);
-      alert("Error al iniciar el pago");
-      setLoading(false);
-    }
-  };
+  const total = useMemo(() => {
+    return cartWithDiscounts.reduce(
+      (sum, item) => sum + item.total,
+      0
+    );
+  }, [cartWithDiscounts]);
+
+  console.log(total)
 
   return (
     <AnimatePresence>
@@ -82,7 +81,7 @@ export const CartDrawer = ({ open, onClose }: Props) => {
               <Empty>TU CARRITO ESTÁ VACÍO</Empty>
             ) : (
               <Content>
-                {cart.map((item) => (
+                {cartWithDiscounts.map((item) => (
                   <CartItem
                     key={item.cartItemId}
                     item={item}

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useProductDetail } from "../../hook/useProductDetail";
 import { Variant } from "../../interfaces/product";
 import { useAuth } from "../../hook/useAuth";
@@ -7,22 +7,47 @@ import { addToCart } from "../../services/cart.service";
 import { NavbarLight } from "../../shared/NabvarLight";
 import styled from "styled-components";
 import { useGlobalAlert } from "../../context/AlertContext";
+import { useDiscounts } from "../../hook/useDiscounts";
+import { getDiscountInfo } from "../../utils/price.utils";
 
 export const ProductDetail = () => {
   const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { showAlert } = useGlobalAlert();
-
   const { product, loading, error } = useProductDetail(id || "");
-  const [variantSelected, setVariantSelected] = useState<Variant | null>(null);
+  const { getActiveDiscounts } = useDiscounts();
 
+  const [variantSelected, setVariantSelected] = useState<Variant | null>(null);
+  const [discounts, setDiscounts] = useState<any[]>([]);
+
+  /* 🔥 cargar descuentos */
+  useEffect(() => {
+    getActiveDiscounts().then(setDiscounts);
+  }, []);
+
+  /* 🔥 setear variante inicial */
   useEffect(() => {
     if (product?.variants?.length) {
       setVariantSelected(product.variants[0]);
     }
   }, [product]);
 
+  /* 🔥 SIEMPRE llamar hooks antes de returns */
+  const discountInfo = useMemo(() => {
+    if (!product || !variantSelected) return null;
+
+    return getDiscountInfo(
+      variantSelected.price,
+      product.id,
+      discounts
+    );
+  }, [product, variantSelected, discounts]);
+
+  const hasDiscount = !!discountInfo?.percent;
+  const finalPrice = discountInfo?.finalPrice ?? variantSelected?.price ?? 0;
+
+  /* ⛔ RETURNS CONDICIONALES AL FINAL */
   if (loading) return <State>Cargando...</State>;
   if (error) return <State>{error}</State>;
   if (!product || !variantSelected) return null;
@@ -45,23 +70,36 @@ export const ProductDetail = () => {
     <>
       <NavbarLight />
       <Container>
-        {/* IMAGEN */}
         <Gallery>
           <MainImage>
+            {hasDiscount && (
+              <DiscountBadge>
+                -{discountInfo?.percent}%
+              </DiscountBadge>
+            )}
             <img src={variantSelected.image} alt={product.name} />
           </MainImage>
         </Gallery>
 
-        {/* INFO */}
         <Info>
           <Category>{product.category}</Category>
           <Title>{product.name}</Title>
 
-          <Price>
-            ${variantSelected.price.toLocaleString("es-CO")}
-          </Price>
+          {hasDiscount ? (
+            <Prices>
+              <OldPrice>
+                ${variantSelected.price.toLocaleString("es-CO")}
+              </OldPrice>
+              <NewPrice>
+                ${finalPrice.toLocaleString("es-CO")}
+              </NewPrice>
+            </Prices>
+          ) : (
+            <Price>
+              ${variantSelected.price.toLocaleString("es-CO")}
+            </Price>
+          )}
 
-          {/* VARIANTES */}
           <Variants>
             {product.variants.map((v) => (
               <VariantButton
@@ -76,7 +114,9 @@ export const ProductDetail = () => {
 
           <Divider />
 
-          <ButtonPrimary onClick={handleAddToCart}>AGREGAR AL CARRITO</ButtonPrimary>
+          <ButtonPrimary onClick={handleAddToCart}>
+            AGREGAR AL CARRITO
+          </ButtonPrimary>
 
           <Divider />
 
@@ -104,23 +144,6 @@ const Container = styled.div`
 
 const Gallery = styled.div`
   width: 100%;
-`;
-
-const MainImage = styled.div`
-  width: 100%;
-  background: #f6f6f6;
-  border-radius: 12px;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 520px;
-    object-fit: cover;
-
-    @media (max-width: 900px) {
-      height: 360px;
-    }
-  }
 `;
 
 const Info = styled.div`
@@ -219,4 +242,50 @@ const State = styled.div`
   text-align: center;
   font-size: 16px;
   color: #666;
+`;
+
+const Prices = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const OldPrice = styled.span`
+  font-size: 16px;
+  color: #999;
+  text-decoration: line-through;
+`;
+
+const NewPrice = styled.span`
+  font-size: 22px;
+  font-weight: 700;
+  color: #e60023;
+`;
+
+const DiscountBadge = styled.div`
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #e60023;
+  color: white;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 8px;
+  z-index: 2;
+`;
+
+const MainImage = styled.div`
+  position: relative;
+  width: 100%;
+  background: #f6f6f6;
+  border-radius: 12px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+  }
 `;
