@@ -5,7 +5,6 @@ import { HeroBanner, Navbar } from "../../shared";
 import { useCategory } from "../../hook/useCategory";
 import styled from "styled-components";
 
-
 export const CatalogPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { products } = useProducts();
@@ -15,20 +14,28 @@ export const CatalogPage = () => {
     (p) => p.category === slug
   );
 
+  const currentCategory = category.find(
+    (c) => c.route === slug
+  );
+
   return (
     <div>
       <Navbar category={category} />
-          <HeroBanner
-              backgroundImage="/img/banner.jpeg"
-              subtitle="IL PARADISO"
-              title="PERDUTO"
-              description="SWIMWEAR & SUNGLASSES"
-            />
-    <Wrapper>
-      <Title>{slug?.toUpperCase()}</Title>
-      <ProductGrid products={filtered} />
-    </Wrapper>
-        
+
+      {currentCategory && (
+        <HeroBanner
+          backgroundImage={currentCategory.banner}
+          subtitle="IL PARADISO"
+          title={currentCategory.name}
+
+        />
+      )}
+
+      <Wrapper>
+        <Title>{slug?.toUpperCase()}</Title>
+        <ProductGrid products={filtered} />
+      </Wrapper>
+
     </div>
   );
 };

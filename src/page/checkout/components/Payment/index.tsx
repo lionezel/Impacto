@@ -27,7 +27,7 @@ export const Payment = () => {
 
                 <Right>
                     <PaymentLogo src="/payments/pse.svg" />
-                    <PaymentLogo src="/payments/visa.svg" />
+                    <PaymentLogo src="/payments/visa.png" />
                     <PaymentLogo src="/payments/mastercard.svg" />
                     <MorePayments>+3</MorePayments>
                 </Right>

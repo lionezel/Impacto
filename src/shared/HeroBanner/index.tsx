@@ -13,6 +13,7 @@ export const HeroBanner = ({
   subtitle,
   description,
 }: Props) => {
+  console.log(backgroundImage)
   return (
     <Wrapper>
       <Background $image={backgroundImage} />
