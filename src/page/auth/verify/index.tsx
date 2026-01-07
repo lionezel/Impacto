@@ -6,52 +6,45 @@ import { Box, Container, Typography } from "@mui/material";
 import { useAlert } from "../../../hook/useAlert";
 import { GlobalAlert } from "../../../global/GlobalAlert";
 
-
 export const VerifyPage = () => {
   const navigate = useNavigate();
   const { alert, showAlert, closeAlert } = useAlert();
 
-  useEffect(() => {
-  const signIn = async () => {
-    try {
-      showAlert("Verificando tu correo...", "info");
+   useEffect(() => {
+    const signIn = async () => {
+      try {
+        showAlert("Verificando tu correo...", "info");
 
-      if (!isSignInWithEmailLink(auth, window.location.href)) {
-        showAlert("El enlace no es válido.", "error");
-        return;
-      }
+        const url = window.location.href;
 
-      const email = window.localStorage.getItem("emailForSignIn");
+        if (!isSignInWithEmailLink(auth, url)) {
+          throw new Error("Invalid link");
+        }
 
-      if (!email) {
+        const email =
+          localStorage.getItem("emailForSignIn") ||
+          window.prompt("Confirma tu correo");
+
+        if (!email) throw new Error("Email requerido");
+
+        await signInWithEmailLink(auth, email, url);
+
+        localStorage.removeItem("emailForSignIn");
+
+        showAlert("Inicio de sesión exitoso 🎉", "success");
+        setTimeout(() => navigate("/"), 1200);
+      } catch (error) {
         showAlert(
-          "Abre el enlace desde el mismo navegador donde solicitaste el acceso.",
-          "warning"
+          "El enlace expiró o ya fue usado. Solicita uno nuevo.",
+          "error"
         );
         setTimeout(() => navigate("/login"), 2500);
-        return;
       }
+    };
 
-      await signInWithEmailLink(auth, email, window.location.href);
+    signIn();
+  }, []);
 
-      window.localStorage.removeItem("emailForSignIn");
-
-      showAlert("Correo verificado correctamente 🎉", "success");
-      setTimeout(() => navigate("/"), 1200);
-    } catch (error: any) {
-      if (error.code === "auth/email-already-in-use") {
-        showAlert("Bienvenido de nuevo 👋", "success");
-        setTimeout(() => navigate("/"), 1200);
-        return;
-      }
-
-      showAlert("El enlace expiró o ya fue usado.", "error");
-      setTimeout(() => navigate("/login"), 2000);
-    }
-  };
-
-  signIn();
-}, []);
   return (
     <>
       <Container
@@ -72,14 +65,7 @@ export const VerifyPage = () => {
             textAlign: "center",
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{
-              fontFamily: "serif",
-              fontWeight: 700,
-              marginBottom: 4,
-            }}
-          >
+          <Typography variant="h4" fontWeight={700} mb={4}>
             Impacto
           </Typography>
 

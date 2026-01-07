@@ -3,6 +3,7 @@ import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useAlert } from "../../../hook/useAlert";
 import { GlobalAlert } from "../../../global/GlobalAlert";
+import { sendLoginEmail } from "../../../services/auth";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -41,6 +42,15 @@ export const LoginPage = () => {
     }
   };
 
+  const handleLogin = async () => {
+    try {
+      await sendLoginEmail(email, "Miguel");
+      showAlert("Revisa tu correo 📩", "success");
+    } catch (err) {
+      showAlert("No se pudo enviar el enlace", "error");
+    }
+  };
+
   return (
     <>
       {!sent ? (
@@ -65,7 +75,7 @@ export const LoginPage = () => {
 
             <Button
               fullWidth
-              onClick={handleSendLink}
+              onClick={handleLogin}
               disabled={loading}
               sx={{
                 backgroundColor: "#0f9d58",
