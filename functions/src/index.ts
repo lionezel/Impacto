@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import { defineString } from "firebase-functions/params";
 
 export { mercadoPagoWebhook } from "./mercadoPagoWebhook";
+export { sendSigninLink } from "./sendSignInLink";
 
 const MP_ACCESS_TOKEN = defineString("MP_ACCESS_TOKEN");
 

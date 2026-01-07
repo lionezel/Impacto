@@ -1,13 +1,6 @@
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { sendSignInLinkToEmail } from "firebase/auth";
 import { useState } from "react";
-import { auth } from "../../../firebase/config";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { useAlert } from "../../../hook/useAlert";
 import { GlobalAlert } from "../../../global/GlobalAlert";
 
@@ -33,22 +26,16 @@ export const LoginPage = () => {
     try {
       setLoading(true);
 
-      const actionCodeSettings = {
-        url: `${process.env.REACT_APP_APP_URL}/verify`,
-        handleCodeInApp: true,
-      };
+      const functions = getFunctions(undefined, "us-central1");
+      const sendSigninLink = httpsCallable(functions, "sendSigninLink");
 
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      await sendSigninLink({ email });
 
-      window.localStorage.setItem("emailForSignIn", email);
       setSent(true);
-
-      showAlert("Te enviamos un enlace de verificación a tu correo", "success");
-    } catch (error) {
-      showAlert(
-        "No se pudo enviar el correo. Intenta nuevamente",
-        "error"
-      );
+      showAlert("Revisa tu correo 📩", "success");
+    } catch (err) {
+      console.error(err);
+      showAlert("No se pudo enviar el enlace", "error");
     } finally {
       setLoading(false);
     }
@@ -57,62 +44,25 @@ export const LoginPage = () => {
   return (
     <>
       {!sent ? (
-        <Container
-          maxWidth={false}
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#fff",
-          }}
-        >
-          <Box
-            sx={{
-              width: 420,
-              padding: "48px 40px",
-              border: "1px solid #eee",
-              textAlign: "center",
-            }}
-          >
-            {/* LOGO */}
-            <Typography
-              variant="h4"
-              sx={{
-                fontFamily: "serif",
-                fontWeight: 700,
-                marginBottom: 4,
-              }}
-            >
+        <Container maxWidth={false} sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Box sx={{ width: 420, p: "48px 40px", border: "1px solid #eee", textAlign: "center" }}>
+            <Typography variant="h4" fontWeight={700} mb={4}>
               Impacto
             </Typography>
-
-            {/* TITULO */}
-            <Typography variant="h6" sx={{ marginBottom: 1 }}>
-              Iniciar sesión
+            <Typography variant="h6" mb={1}>Iniciar sesión</Typography>
+            <Typography variant="body2" color="text.secondary" mb={3}>
+              Introduce tu correo y te enviaremos un enlace
             </Typography>
 
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ marginBottom: 3 }}
-            >
-              Introduce tu correo electrónico y te enviaremos un código de
-              verificación
-            </Typography>
-
-            {/* INPUT */}
             <TextField
               fullWidth
               placeholder="Correo electrónico"
-              variant="outlined"
-              sx={{ marginBottom: 3 }}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
+              sx={{ mb: 3 }}
             />
 
-            {/* BOTÓN */}
             <Button
               fullWidth
               onClick={handleSendLink}
@@ -120,11 +70,9 @@ export const LoginPage = () => {
               sx={{
                 backgroundColor: "#0f9d58",
                 color: "#fff",
-                padding: "14px 0",
+                py: 1.6,
                 fontWeight: 600,
-                "&:hover": {
-                  backgroundColor: "#0c7c45",
-                },
+                "&:hover": { backgroundColor: "#0c7c45" },
               }}
             >
               {loading ? "Enviando..." : "Continuar"}
@@ -132,51 +80,19 @@ export const LoginPage = () => {
           </Box>
         </Container>
       ) : (
-        <Container
-          maxWidth={false}
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#fff",
-          }}
-        >
-          <Box
-            sx={{
-              width: 420,
-              padding: "48px 40px",
-              border: "1px solid #eee",
-              textAlign: "center",
-            }}
-          >
-            <Typography
-              variant="h4"
-              sx={{
-                fontFamily: "serif",
-                fontWeight: 700,
-                marginBottom: 4,
-              }}
-            >
+        <Container maxWidth={false} sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Box sx={{ width: 420, p: "48px 40px", border: "1px solid #eee", textAlign: "center" }}>
+            <Typography variant="h4" fontWeight={700} mb={4}>
               Impacto
             </Typography>
-
-            <Typography variant="h6">
-              Revisa tu correo 📩
-            </Typography>
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ marginTop: 2 }}
-            >
-              Te enviamos un enlace para continuar el inicio de sesión
+            <Typography variant="h6">Revisa tu correo 📩</Typography>
+            <Typography variant="body2" color="text.secondary" mt={2}>
+              Te enviamos un enlace para continuar
             </Typography>
           </Box>
         </Container>
       )}
 
-      {/* ALERTA GLOBAL */}
       <GlobalAlert
         open={alert.open}
         message={alert.message}
