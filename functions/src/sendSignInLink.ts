@@ -34,28 +34,80 @@ export const sendSigninLink = onCall(
       to: email,
       subject: `Hola ${name ?? ""}, inicia sesión`,
       html: `
-        <div style="font-family:Arial;max-width:600px;margin:auto">
-          <h2>Hola ${name ?? "👋"}</h2>
-          <p>Haz click para iniciar sesión:</p>
+<!DOCTYPE html>
+<html>
+  <body style="margin:0;padding:0;background-color:#ffffff;font-family:Arial,Helvetica,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding:40px 16px;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="max-width:420px;border:1px solid #e5e7eb;border-radius:8px;padding:32px;">
+            
+            <!-- LOGO / TITULO -->
+            <tr>
+              <td align="center">
+                <h1 style="margin:0;font-size:28px;font-weight:700;color:#000;">
+                  Impacto
+                </h1>
+              </td>
+            </tr>
 
-          <a href="${link}"
-             style="
-               display:inline-block;
-               background:#000;
-               color:#fff;
-               padding:12px 24px;
-               border-radius:6px;
-               text-decoration:none;
-               font-weight:bold;
-             ">
-            Iniciar sesión
-          </a>
+            <!-- SUBTITULO -->
+            <tr>
+              <td align="center" style="padding-top:16px;">
+                <p style="margin:0;font-size:16px;font-weight:600;color:#000;">
+                  Iniciar sesión
+                </p>
+              </td>
+            </tr>
 
-          <p style="margin-top:24px;font-size:12px;color:#666">
-            Este enlace es personal y expira pronto.
-          </p>
-        </div>
-      `,
+            <!-- DESCRIPCION -->
+            <tr>
+              <td align="center" style="padding-top:8px;">
+                <p style="margin:0;font-size:14px;color:#6b7280;">
+                  Haz click en el botón para iniciar sesión
+                </p>
+              </td>
+            </tr>
+
+            <!-- BOTON -->
+            <tr>
+              <td align="center" style="padding-top:24px;">
+                <a
+                  href="${link}"
+                  style="
+                    display:block;
+                    width:100%;
+                    background-color:#16a34a;
+                    color:#ffffff;
+                    text-align:center;
+                    text-decoration:none;
+                    font-size:14px;
+                    font-weight:700;
+                    padding:14px 0;
+                    border-radius:6px;
+                  "
+                >
+                  CONTINUAR
+                </a>
+              </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+              <td align="center" style="padding-top:24px;">
+                <p style="margin:0;font-size:12px;color:#9ca3af;">
+                  Este enlace es personal y expira pronto.
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+`,
     });
 
     return { success: true };
