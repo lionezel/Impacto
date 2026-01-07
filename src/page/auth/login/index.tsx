@@ -61,7 +61,7 @@ export const LoginPage = () => {
             </Typography>
             <Typography variant="h6" mb={1}>Iniciar sesión</Typography>
             <Typography variant="body2" color="text.secondary" mb={3}>
-              Introduce tu correo y te enviaremos un enlace
+              Introduce tu correo y te enviaremos un enlace hoal
             </Typography>
 
             <TextField
