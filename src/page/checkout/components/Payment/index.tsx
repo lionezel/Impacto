@@ -4,50 +4,36 @@ import styled from "styled-components";
 export const Payment = () => {
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "card">("cash");
 
-    return (
-        <Block>
-            <Title>Pago</Title>
+  return (
+    <Block>
+      <Title>Pago</Title>
 
-            <PaymentCard
-                $active={paymentMethod === "card"}
-                onClick={() => setPaymentMethod("card")}
-            >
-                <Left>
-                    <input
-                        type="radio"
-                        checked={paymentMethod === "card"}
-                        readOnly
-                    />
-                    <div>
-                        <PaymentTitle>
-                            Mercado Pago | Tarjetas de Crédito, Débito, Efecty
-                        </PaymentTitle>
-                    </div>
-                </Left>
+      <PaymentCard
+        $active={paymentMethod === "card"}
+        onClick={() => setPaymentMethod("card")}
+      >
+        <Left>
+          <input
+            type="radio"
+            checked={paymentMethod === "card"}
+            readOnly
+          />
+          <div>
+            <PaymentTitle>
+              Mercado Pago | Tarjetas de Crédito, Débito, Efecty
+            </PaymentTitle>
+          </div>
+        </Left>
 
-                <Right>
-                    <PaymentLogo src="/payments/pse.svg" />
-                    <PaymentLogo src="/payments/visa.png" />
-                    <PaymentLogo src="/payments/mastercard.svg" />
-                    <MorePayments>+3</MorePayments>
-                </Right>
-            </PaymentCard>
-
-            <PaymentCard
-                $active={paymentMethod === "cash"}
-                onClick={() => setPaymentMethod("cash")}
-            >
-                <Left>
-                    <input
-                        type="radio"
-                        checked={paymentMethod === "cash"}
-                        readOnly
-                    />
-                    <PaymentTitle>Efectivo contra entrega</PaymentTitle>
-                </Left>
-            </PaymentCard>
-        </Block>
-    )
+        <Right>
+          <PaymentLogo src="/payments/pse.png" />
+          <PaymentLogo src="/payments/visa.png" />
+          <PaymentLogo src="/payments/mastercard.png" />
+          <MorePayments>+3</MorePayments>
+        </Right>
+      </PaymentCard>
+    </Block>
+  )
 }
 
 const Block = styled.div`
