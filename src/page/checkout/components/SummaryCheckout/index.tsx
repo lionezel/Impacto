@@ -84,7 +84,7 @@ export const SummaryCheckout = ({ cart, form }: Props) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            total,
+            finaltotal,
             cart,
             form,
             userId: auth.currentUser?.uid,

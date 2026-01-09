@@ -3,6 +3,7 @@ import { defineSecret } from "firebase-functions/params";
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { Resend } from "resend";
+import { senderEmail } from "./global/environtment";
 
 initializeApp();
 
@@ -30,17 +31,20 @@ export const sendSigninLink = onCall(
     const resend = new Resend(RESEND_KEY.value());
 
     await resend.emails.send({
-      from: "Impacto <onboarding@resend.dev>",
+      from: `${senderEmail}`,
       to: email,
       subject: `Hola ${name ?? ""}, inicia sesión`,
       html: `
 <!DOCTYPE html>
 <html>
-  <body style="margin:0;padding:0;background-color:#ffffff;font-family:Arial,Helvetica,sans-serif;">
+  <body style="margin:0;padding:0;background-color:#ffffff;
+  font-family:Arial,Helvetica,sans-serif;">
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center" style="padding:40px 16px;">
-          <table width="100%" cellpadding="0" cellspacing="0" style="max-width:420px;border:1px solid #e5e7eb;border-radius:8px;padding:32px;">
+          <table width="100%" cellpadding="0" cellspacing="0" 
+          style="max-width:420px;
+          border:1px solid #e5e7eb;border-radius:8px;padding:32px;">
             
             <!-- LOGO / TITULO -->
             <tr>
