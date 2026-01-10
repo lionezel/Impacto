@@ -270,6 +270,7 @@ const Divider = styled.hr`
 `;
 
 const PayButton = styled.button`
+  margin-top: 20px;
   width: 100%;
   padding: 18px;
   background: #000;
