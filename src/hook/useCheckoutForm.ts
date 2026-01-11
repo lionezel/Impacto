@@ -48,7 +48,7 @@ export const useCheckoutForm = () => {
     const saveForm = async (data: CheckoutForm) => {
         if (!user) return;
 
-        const ref = doc(db, "users", user.uid);
+        const ref = doc(db, "restaurants", RestaurantId, "users", user.uid);
         await setDoc(
             ref,
             { checkout: data },
