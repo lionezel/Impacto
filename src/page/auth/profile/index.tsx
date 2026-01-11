@@ -46,85 +46,81 @@ export const ProfilePage = () => {
 
   return (
     <>
-    <NavbarLight />
-    <Container maxWidth="md" sx={{ py: 6 }}>
-      <Typography variant="h4" fontWeight={700} mb={4}>
-        Mis pedidos
-      </Typography>
+      <NavbarLight />
+      <Container maxWidth="md" sx={{ py: 6 }}>
+        <Typography variant="h4" fontWeight={700} mb={4}>
+          Mis pedidos
+        </Typography>
 
-      {loading && <Typography>Cargando pedidos...</Typography>}
+        {loading && <Typography>Cargando pedidos...</Typography>}
 
-      {!loading && orders.length === 0 && (
-        <Typography>No tienes pedidos aún</Typography>
-      )}
+        {!loading && orders.length === 0 && (
+          <Typography>No tienes pedidos aún</Typography>
+        )}
 
-      {!loading &&
-        orders.map((order: any) => {
-          const date = order.date?.toDate ? order.date.toDate() : new Date(order.date);
+        {!loading &&
+          orders.map((order: any) => {
+            const date = order.date?.toDate ? order.date.toDate() : new Date(order.date);
 
-          const totalGeneral = order.products.reduce(
-            (acc: any, p: any) => acc + Number(p.total ?? Number(p.price) * Number(p.quantity)),
-            0
-          );
+            const totalGeneral = order.products.reduce(
+              (acc: any, p: any) => acc + Number(p.total ?? Number(p.price) * Number(p.quantity)),
+              0
+            );
 
-          return (
-            <Box key={order.id} sx={orderBoxSx}>
-              {/* HEADER */}
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography fontWeight={600}>Pedido #{order.id?.slice(0, 8)}</Typography>
-                
-                <Stack direction="row" spacing={1}>
-                  <Chip
-                    label={order.paymentMethod}
-                    color={paymentColorMap[order.paymentMethod] || "warning"}
-                  />
-                  <Chip
-                    label={order.state}
-                    color={stateColorMap[order.state] || "default"}
-                  />
-                </Stack>
-              </Box>
+            return (
+              <Box key={order.id} sx={orderBoxSx}>
+                {/* HEADER */}
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                  <Typography fontWeight={600}>Pedido #{order.id?.slice(0, 8)}</Typography>
 
-              {/* FECHA */}
-
-
-              {/* DIRECCIÓN */}
-              {order.address && (
-                <Typography variant="body2" color="text.secondary" mb={2}>
-                  📍 {order.address}
-                </Typography>
-              )}
-
-              <Divider sx={{ mb: 2 }} />
-
-              {/* ITEMS */}
-              <Stack spacing={2}>
-                {order.products.map((p: any, index: number) => (
-                  <Stack key={`${order.id}-${p.productId ?? index}`} direction="row" spacing={2} alignItems="center">
-                    <Avatar src={p.image} alt={p.name} sx={avatarSx} />
-                    <Box flex={1}>
-                      <Typography fontWeight={600}>{p.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Cantidad: {p.quantity} | Precio: ${p.price.toLocaleString()} | Total: $
-                        {Number(p.total ?? Number(p.price) * p.quantity).toLocaleString()}
-                      </Typography>
-                    </Box>
+                  <Stack direction="row" spacing={1}>
+                    <Chip
+                      label={order.state}
+                      color={stateColorMap[order.state] || "default"}
+                    />
                   </Stack>
-                ))}
-              </Stack>
+                </Box>
 
-              <Divider sx={{ my: 2 }} />
+                {/* FECHA */}
 
-              {/* TOTAL */}
-              <Box display="flex" justifyContent="flex-end">
-                <Typography fontWeight={700} variant="subtitle1">
-                  Total: ${totalGeneral.toLocaleString()}
-                </Typography>
+
+                {/* DIRECCIÓN */}
+                {order.address && (
+                  <Typography variant="body2" color="text.secondary" mb={2}>
+                    📍 {order.address}
+                  </Typography>
+                )}
+
+                <Divider sx={{ mb: 2 }} />
+
+                {/* ITEMS */}
+                <Stack spacing={2}>
+                  {order.products.map((p: any, index: number) => (
+                    <Stack key={`${order.id}-${p.productId ?? index}`} direction="row" spacing={2} alignItems="center">
+                      <Avatar src={p.image} alt={p.name} sx={avatarSx} />
+                      <Box flex={1}>
+                        <Typography fontWeight={600}>{p.name}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Cantidad: {p.quantity} | Precio: ${p.price.toLocaleString()} | Total: $
+                          {Number(p.total ?? Number(p.price) * p.quantity).toLocaleString()}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  ))}
+                </Stack>
+
+                <Divider sx={{ my: 2 }} />
+
+                {/* TOTAL */}
+                <Box display="flex" justifyContent="flex-end">
+                  <Typography fontWeight={700} variant="subtitle1">
+                    Total: ${totalGeneral.toLocaleString()}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          );
-        })}
-    </Container>
+            );
+          })}
+      </Container>
     </>
   );
 };

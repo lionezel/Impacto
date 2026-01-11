@@ -6,10 +6,12 @@ import { FormCheckout, Payment, SummaryCheckout } from "./components";
 
 import { useCart } from "../../hook/useCart";
 import { useCheckoutForm } from "../../hook/useCheckoutForm";
+import { useLoading } from "../../context/LoadingContext";
 
 export const Checkout = () => {
   const { cart } = useCart();
   const { form, setForm, saveForm, loading } = useCheckoutForm();
+  const { showLoading, hideLoading } = useLoading();
 
   const user = getAuth().currentUser;
 
