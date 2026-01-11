@@ -1,21 +1,39 @@
-import { useCart } from "../../hook/useCart";
+import styled from "styled-components";
 import { getAuth } from "firebase/auth";
+
 import { NavbarLight } from "../../shared/NabvarLight";
 import { FormCheckout, Payment, SummaryCheckout } from "./components";
-import styled from "styled-components";
-import { useState } from "react";
+
+import { useCart } from "../../hook/useCart";
+import { useCheckoutForm } from "../../hook/useCheckoutForm";
 
 export const Checkout = () => {
   const { cart } = useCart();
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const { form, setForm, saveForm, loading } = useCheckoutForm();
 
-  const [form, setForm] = useState({
-    name: "",
-    address: "",
-    city: "",
-    phone: "",
-  });
+  const user = getAuth().currentUser;
+
+  // 🔹 Guarda automáticamente cada cambio del formulario
+  const handleFormChange = (updater: any) => {
+    setForm((prev: any) => {
+      const updated =
+        typeof updater === "function" ? updater(prev) : updater;
+
+      saveForm(updated);
+      return updated;
+    });
+  };
+
+  if (loading) {
+    return (
+      <>
+        <NavbarLight />
+        <Page>
+          <p>Cargando datos de entrega...</p>
+        </Page>
+      </>
+    );
+  }
 
   return (
     <>
@@ -23,25 +41,31 @@ export const Checkout = () => {
       <Page>
         <Content>
           <Main>
+            {/* Contacto */}
             <Block>
               <Title>Contacto</Title>
               <Input
-                value={user?.email || ""}
+                value={user?.email ?? ""}
                 disabled
                 placeholder="Correo electrónico"
               />
             </Block>
 
-            <FormCheckout form={form} setForm={setForm} />
-            <Payment />
+            {/* Entrega */}
+            <FormCheckout form={form} setForm={handleFormChange} />
 
+            {/* Pago */}
+            <Payment />
           </Main>
+
+          {/* Resumen */}
           <SummaryCheckout cart={cart} form={form} />
         </Content>
       </Page>
     </>
   );
 };
+
 
 const Page = styled.div`
   background: #fafafa;
