@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import fetch from "node-fetch";
-import { defineSecret, defineString } from "firebase-functions/params";
+import { defineSecret } from "firebase-functions/params";
 import { initializeApp } from "firebase-admin/app";
 
 export { mercadoPagoWebhook } from "./mercadoPagoWebhook";
@@ -12,11 +12,36 @@ export { sendSigninLink } from "./sendSignInLink";
 initializeApp();
 
 /* =========================
-   Params & Secrets
+   Secrets por proyecto
 ========================= */
-const MP_ACCESS_TOKEN = defineString("MP_ACCESS_TOKEN");
 
-const FRONTEND_URL = defineSecret("FRONTEND_URL");
+// IMPACTO
+const MP_TOKEN_IMPACTO = defineSecret("MP_TOKEN_IMPACTO");
+const FRONTEND_IMPACTO = defineSecret("FRONTEND_IMPACTO");
+
+// OTRO PROYECTO
+const MP_TOKEN_TIENDA2 = defineSecret("MP_TOKEN_TIENDA2");
+const FRONTEND_TIENDA2 = defineSecret("FRONTEND_TIENDA2");
+
+/* =========================
+   Configuración por proyecto
+========================= */
+const PROJECT_CONFIG: Record<
+  string,
+  {
+    mpToken: ReturnType<typeof defineSecret>;
+    frontendUrl: ReturnType<typeof defineSecret>;
+  }
+> = {
+  impacto: {
+    mpToken: MP_TOKEN_IMPACTO,
+    frontendUrl: FRONTEND_IMPACTO,
+  },
+  tienda2: {
+    mpToken: MP_TOKEN_TIENDA2,
+    frontendUrl: FRONTEND_TIENDA2,
+  },
+};
 
 /* =========================
    Create Preference
@@ -24,7 +49,12 @@ const FRONTEND_URL = defineSecret("FRONTEND_URL");
 export const createPreference = functions.https.onRequest(
   {
     region: "us-central1",
-    secrets: [FRONTEND_URL],
+    secrets: [
+      MP_TOKEN_IMPACTO,
+      FRONTEND_IMPACTO,
+      MP_TOKEN_TIENDA2,
+      FRONTEND_TIENDA2,
+    ],
   },
   async (req, res) => {
     /* ---------- CORS ---------- */
@@ -45,6 +75,7 @@ export const createPreference = functions.https.onRequest(
     try {
       /* ---------- Body ---------- */
       const {
+        projectId,
         finaltotal,
         cart,
         form,
@@ -53,10 +84,21 @@ export const createPreference = functions.https.onRequest(
         userId,
       } = req.body;
 
-      if (!finaltotal || !userId) {
+      if (!projectId || !finaltotal || !userId) {
         res.status(400).json({ error: "Missing required fields" });
         return;
       }
+
+      /* ---------- Config proyecto ---------- */
+      const config = PROJECT_CONFIG[projectId];
+
+      if (!config) {
+        res.status(400).json({ error: "Proyecto no válido" });
+        return;
+      }
+
+      const mpToken = config.mpToken.value();
+      const frontendUrl = config.frontendUrl.value();
 
       /* ---------- Mercado Pago ---------- */
       const mpRes = await fetch(
@@ -64,13 +106,13 @@ export const createPreference = functions.https.onRequest(
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${MP_ACCESS_TOKEN.value()}`,
+            Authorization: `Bearer ${mpToken}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             items: [
               {
-                title: "Compra Impacto",
+                title: "Compra",
                 quantity: 1,
                 unit_price: Number(finaltotal),
                 currency_id: "COP",
@@ -78,6 +120,7 @@ export const createPreference = functions.https.onRequest(
             ],
 
             metadata: {
+              project_id: projectId,
               cart,
               form,
               user_id: userId,
@@ -85,12 +128,12 @@ export const createPreference = functions.https.onRequest(
               payment_method: paymentMethod,
             },
 
-            external_reference: userId,
+            external_reference: `${projectId}_${userId}`,
 
             back_urls: {
-              success: `${FRONTEND_URL.value()}/success`,
-              failure: `${FRONTEND_URL.value()}/failure`,
-              pending: `${FRONTEND_URL.value()}/pending`,
+              success: `${frontendUrl}/success`,
+              failure: `${frontendUrl}/failure`,
+              pending: `${frontendUrl}/pending`,
             },
 
             notification_url:
