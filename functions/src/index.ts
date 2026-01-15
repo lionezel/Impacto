@@ -106,7 +106,7 @@ export const createPreference = functions.https.onRequest(
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${mpToken}`,
+            "Authorization": `Bearer ${mpToken}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
