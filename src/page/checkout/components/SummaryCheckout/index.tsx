@@ -6,7 +6,6 @@ import { getAuth } from "firebase/auth";
 import { getFinalPrice } from "../../../../utils/getFinalPrice";
 import { useDiscounts } from "../../../../hook/useDiscounts";
 import { getDiscountInfo } from "../../../../utils/price.utils";
-import { RestaurantId } from "../../../../global/restaurantId";
 
 interface Props {
   cart: CartItem[];
@@ -85,7 +84,6 @@ export const SummaryCheckout = ({ cart, form }: Props) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            projectId: "Impacto",
             finaltotal,
             cart,
             form,
