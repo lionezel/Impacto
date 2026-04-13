@@ -12,6 +12,8 @@ import { Failure, Pending } from './page/checkout/page';
 import { LoadingProvider } from './context/LoadingContext';
 import './App.css';
 
+//Hola
+
 function App() {
   initMercadoPago(process.env.REACT_APP_MP_PUBLIC_KEY!);
   return (
